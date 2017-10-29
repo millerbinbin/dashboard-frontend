@@ -397,7 +397,7 @@ export default {
     }
   },
   mounted: function () {
-    let serverUrl = 'http://10.8.42.129:8080/hydra-man-web/api/stat'
+    let serverUrl = 'http://localhost:8080/hydra-man-web/api/stat'
     let categoryUrl = serverUrl + '/categories'
     let dataUrl = serverUrl + '/2017-11-24'
     let lineDataUrl = serverUrl + '/c'

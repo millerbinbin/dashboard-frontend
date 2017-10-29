@@ -70,11 +70,13 @@ body
 .input-group.input-group--selection-controls label
   left: 24px
 
+.alert
+  padding: 4px
 </style>
 <template>
   <v-container grid-list-sm text-xs-center>
     <v-layout row wrap>
-      <v-flex xs6 offset-xs3 style="padding-top: 30%">
+      <v-flex xs6 offset-xs3 style="padding-top: 25%">
         <v-avatar size="96px" class="grey lighten-4">
           <img src="https://vuetifyjs.com/static/apple-touch-icon-180x180.png" alt="avatar">
         </v-avatar>
@@ -94,6 +96,9 @@ body
             type="password"
             required
           ></v-text-field>
+          <v-alert v-show="!verified" color="error" icon="warning" value="true">
+            {{ errorMsg }}
+          </v-alert>
           <v-layout row wrap>
             <v-flex xs6>
             <v-checkbox
@@ -125,14 +130,17 @@ Vue.use(Vuetify)
 export default {
   data: () => ({
     msg: 'Welcome to Your Vue.js App',
-    valid: true,
+    valid: false,
+    verified: true,
     e1: null,
     e2: false,
+    errorMsg: null,
     username: null,
     nameRules: [
       (v) => !!v || '用户名不能为空'
     ],
     password: null,
+    mobile: null,
     pwdRules: [
       (v) => !!v || '密码不能为空'
     ],
@@ -141,15 +149,20 @@ export default {
   }),
   methods: {
     submit () {
-      let serverUrl = 'http://10.8.42.146:8080/hydra-man-web/api/stat'
+      let serverUrl = 'http://192.168.199.200:8080/hydra-man-web/api/stat'
       if (this.$refs.form.validate()) {
         axios.post(serverUrl + '/login', {
-          name: this.username,
+          username: this.username,
           password: this.password
         }).then(function (res) {
-          console.log(res.data)
-          this.$router.push({ name: 'homepage' })
-        })
+          if (res.data.errors === undefined || res.data.errors.length === 0) {
+            this.$router.push({ name: 'homepage' })
+          } else {
+            this.verified = false
+            this.errorMsg = res.data.errors[0].msg
+            this.$refs.form.reset()
+          }
+        }.bind(this))
           .catch(function (err) {
             console.log(err)
           })

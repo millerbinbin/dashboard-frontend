@@ -189,6 +189,14 @@ import 'echarts/lib/component/tooltip'
 Vue.use(Vuetify)
 Vue.component('chart', ECharts)
 
+function addDate (dd, dadd) {
+  let a = new Date(dd)
+  a = a.valueOf()
+  a = a + dadd * 24 * 60 * 60 * 1000
+  a = new Date(a)
+  return a.getFullYear() + '/' + (a.getMonth() + 1) + '/' + a.getDate()
+}
+
 export default {
   data: () => ({
     msg: 'Welcome to Your Vue.js App',
@@ -244,8 +252,8 @@ export default {
           tooltip: {
             trigger: 'axis',
             formatter: function (params) {
-              return '<span style="font-size:12px; color: #00D7FB">' + params[0].seriesName + ' : ' + params[0].value + '</span><br>' +
-                '<span style="font-size:12px; color: #6E88AC">' + params[1].seriesName + ' : ' + params[1].value + '</span>'
+              return '<span style="font-size:12px; color: #00D7FB">' + params[0].name + ' : ' + params[0].value + '</span><br>' +
+                '<span style="font-size:12px; color: #6E88AC">' + addDate(params[0].name, -7) + ' : ' + params[1].value + '</span>'
             },
             axisPointer: {
               animation: false
@@ -314,7 +322,8 @@ export default {
           tooltip: {
             trigger: 'axis',
             formatter: function (params) {
-              return params[0].seriesName + ' : ' + params[0].value + '<br>' + params[1].seriesName + ' : ' + params[1].value
+              return '<span style="font-size:12px; color: #00D7FB">' + params[0].name + ' : ' + params[0].value + '</span><br>' +
+                '<span style="font-size:12px; color: #6E88AC">' + addDate(params[0].name, -7) + ' : ' + params[1].value + '</span>'
             },
             axisPointer: {
               animation: false
@@ -382,7 +391,7 @@ export default {
   },
   mounted: function () {
     this.e1 = this.items[0]
-    let serverUrl = 'http://10.8.42.146:8080/hydra-man-web/api/stat'
+    let serverUrl = 'http://192.168.199.200:8080/hydra-man-web/api/stat'
     let lineDataUrl = serverUrl + '/c'
     let periodUrl = serverUrl + '/periods'
     axios.get(periodUrl)
