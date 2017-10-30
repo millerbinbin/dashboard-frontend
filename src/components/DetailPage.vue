@@ -115,8 +115,8 @@ body
       </v-flex>
     </v-layout>
     <v-layout row wrap>
-      <v-flex xs6 style="font-size: .625em; text-align: left; padding-left: 5px; padding-top: 2px">{{ username }}</v-flex>
-      <v-flex xs6 style="font-size: .625em; text-align: right; padding-right: 5px; padding-top: 2px">数据日期：{{ statDate}}</v-flex>
+      <v-flex xs6 style="font-size: .625em; text-align: left; padding-left: 5px; padding-top: 2px">{{ $store.state.sysUser }}</v-flex>
+      <v-flex xs6 style="font-size: .625em; text-align: right; padding-right: 5px; padding-top: 2px">数据日期：{{ $store.state.sysDate }}</v-flex>
     </v-layout>
     <v-carousel hide-controls style="height: 360px" v-model="idx">
       <v-carousel-item
@@ -132,7 +132,7 @@ body
             <v-layout row wrap>
               <v-flex xs4 style="font-size: .75em; text-align: left">{{ item.funcName }}</v-flex>
               <v-flex xs3 style="font-size: .5em; text-align: left;">
-                {{ item.f1 }}<br>
+                {{ item.f1Name }}<br>
                 <b style="font-size: 1.25em">{{ item.f1Value }}</b>
                 <i v-if="item.f1Value > 0" class="material-icons md-16 green100">trending_up</i>
                 <i v-else-if="item.f1Value == 0" class="material-icons md-16 yellow100">trending_flat</i>
@@ -140,16 +140,16 @@ body
               </v-flex>
               <v-flex xs1 style="padding-top: 8px"><div class="grey-bar"/></v-flex>
               <v-flex xs3 style="font-size: .5em; text-align: left; padding-top: 5px">2017/10/11</v-flex>
-              <v-flex xs4 style="font-size: 1.25em; text-align: left"><b>{{ item.value }}</b></v-flex>
+              <v-flex xs4 style="font-size: 1.25em; text-align: left"><b>{{ item.funcValue }}</b></v-flex>
               <v-flex xs3 style="font-size: .5em; text-align: left;">
-                {{ item.f2 }}<br>
+                {{ item.f2Name }}<br>
                 <b style="font-size: 1.25em">{{ item.f2Value }}</b>
                 <i v-if="item.f2Value > 0" class="material-icons md-16 green100">trending_up</i>
                 <i v-else-if="item.f2Value == 0" class="material-icons md-16 yellow100">trending_flat</i>
                 <i v-else-if="item.f2Value < 0" class="material-icons md-16 red100">trending_down</i>
               </v-flex>
               <v-flex xs1 style="padding-top: 8px"><div class="cyan-bar"/></v-flex>
-              <v-flex xs4 style="font-size: .5em; text-align: left; padding-top: 5px">2017/11/11</v-flex>
+              <v-flex xs4 style="font-size: .5em; text-align: left; padding-top: 5px">{{ item.c2Name}}</v-flex>
               <v-flex xs4 style="padding: 0 0"><div class="under-bar"></div></v-flex>
             </v-layout>
           </v-card>
@@ -212,6 +212,64 @@ function addDate (dd, dadd) {
   a = a + dadd * 24 * 60 * 60 * 1000
   a = new Date(a)
   return a.getFullYear() + '/' + (a.getMonth() + 1) + '/' + a.getDate()
+}
+
+function dateFormatted (params) {
+  return '<span style="font-size:12px; color: #00D7FB">' + params[0].name + ' : ' + params[0].value + '</span><br>' +
+                '<span style="font-size:12px; color: #6E88AC">' + addDate(params[0].name, -7) + ' : ' + params[1].value + '</span>'
+}
+
+var line = {
+  tooltip: {
+    trigger: 'axis',
+    axisPointer: {
+      animation: false
+    }
+  },
+  xAxis: {
+    type: 'category',
+    splitLine: {
+      show: false
+    },
+    axisLine: {
+      lineStyle: {
+        color: '#6E88AC'
+      }
+    },
+    data: []
+  },
+  yAxis: {
+    type: 'value',
+    boundaryGap: [0, '100%'],
+    splitLine: {
+      show: false
+    },
+    axisLine: {
+      lineStyle: {
+        color: '#6E88AC'
+      }
+    }
+  },
+  series: [{
+    type: 'line',
+    itemStyle: {
+      normal: {
+        color: '#00D7FB',
+        width: 1
+      }
+    },
+    data: []
+  },
+  {
+    type: 'line',
+    itemStyle: {
+      normal: {
+        color: '#6E88AC',
+        width: 1
+      }
+    },
+    data: []
+  }]
 }
 
 export default {
@@ -391,23 +449,19 @@ export default {
   mounted: function () {
     this.e1 = this.items_1[0]
     this.e2 = this.items_2[0]
-    let serverUrl = 'http://10.8.42.143:8080/dashboard-web/api/stat'
-    let lineDataUrl = serverUrl + '/c'
-    let periodUrl = serverUrl + '/periods'
-    axios.get(periodUrl)
+    let serverUrl = 'http://localhost:8080/dashboard-web/api/stat'
+    let chartsUrl = serverUrl + '/chartinfo'
+    axios.get(chartsUrl)
       .then(function (res) {
-        this.chartInfo[0].line.xAxis.data = res.data
-        this.chartInfo[1].line.xAxis.data = res.data
-      }.bind(this))
-      .catch(function (err) {
-        console.log(err)
-      })
-    axios.get(lineDataUrl)
-      .then(function (res) {
-        this.chartInfo[0].line.series[0].data = res.data[0]
-        this.chartInfo[0].line.series[1].data = res.data[1]
-        this.chartInfo[1].line.series[0].data = res.data[2]
-        this.chartInfo[1].line.series[1].data = res.data[3]
+        this.chartInfo = res.data
+        console.log(res.data)
+        for (var i = 0; i <= res.data.length - 1; i++) {
+          this.chartInfo[i].line = JSON.parse(JSON.stringify(line))
+          this.chartInfo[i].line.xAxis.data = res.data[i].periods
+          this.chartInfo[i].line.series[0].data = res.data[i].c1Value
+          this.chartInfo[i].line.series[1].data = res.data[i].c2Value
+          this.chartInfo[i].line.tooltip.formatter = dateFormatted
+        }
       }.bind(this))
       .catch(function (err) {
         console.log(err)

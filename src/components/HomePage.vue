@@ -74,44 +74,47 @@ body
   color: #fbfdff
   background-color: #2E3C51
 
+.custom
+  background-color: #2E3C51
 </style>
 
 <template>
-  <v-container grid-list-sm text-xs-center style="padding-top: 0px">
-    <v-layout row wrap style="background-color: #2E3C51; height: 60px; ">
+  <v-container grid-list-sm text-xs-center pt-0>
+    <v-layout row wrap custom style="height: 60px; ">
       <v-flex xs8>
-        <v-select
-          v-bind:items="items"
-          v-model="e1"
-          item-text="text"
-          item-value="text"
-          single-line
-          bottom
-          style="width: 50%"
-        ></v-select>
+        <v-card>
+          <v-select
+            v-bind:items="items"
+            v-model="e1"
+            item-text="text"
+            item-value="text"
+            single-line
+            bottom
+            style="width: 50%"
+          ></v-select>
+        </v-card>
       </v-flex>
       <v-flex xs2 offset-xs2 style="padding-top: 21px">
         <i class="material-icons md-24 grey100" @click=goSettings>settings</i>
       </v-flex>
     </v-layout>
-    <v-layout row wrap>
-      <v-flex xs6 style="font-size: .625em; text-align: left; padding-left: 5px; padding-top: 2px">{{ username }}</v-flex>
-      <v-flex xs6 style="font-size: .625em; text-align: right; padding-right: 5px; padding-top: 2px">数据日期：{{ statDate}}</v-flex>
+    <v-layout row wrap text-xs-left>
+      <v-flex xs6 style="font-size: .625em; padding-left: 5px; padding-top: 2px">{{ $store.state.sysUser }}</v-flex>
+      <v-flex xs6 text-xs-right style="font-size: .625em; padding-right: 5px; padding-top: 2px">数据日期：{{ $store.state.sysDate }}</v-flex>
       <v-flex xs6 v-for="item in boxInfo">
         <v-card style="padding: 5px; background-color: #2E3C51; height: 88px">
-          <!-- <v-card-text class="px-0">6</v-card-text> -->
-          <v-layout row wrap>
-            <v-flex xs8 style="font-size: .75em; text-align: left; padding-top: 10px; padding-bottom: 0px">{{ item.funcName }}</v-flex>
-            <v-flex xs4 style="font-size: .5em; text-align: left;">
-              {{ item.f1 }}<br>
+          <v-layout row wrap text-xs-left>
+            <v-flex xs8 style="font-size: .75em; padding-top: 10px; padding-bottom: 0px">{{ item.funcName }}</v-flex>
+            <v-flex xs4 style="font-size: .5em">
+              {{ item.f1Name }}<br>
               <b style="font-size: 1.25em">{{ item.f1Value }}</b>
               <i v-if="item.f1Value > 0" class="material-icons md-16 green100">trending_up</i>
               <i v-else-if="item.f1Value == 0" class="material-icons md-16 yellow100">trending_flat</i>
               <i v-else-if="item.f1Value < 0" class="material-icons md-16 red100">trending_down</i>
             </v-flex>
-            <v-flex xs8 style="font-size: 1.25em; text-align: left; padding-top: 5px; padding-bottom: 0px"><b>{{ item.value }}</b></v-flex>
-            <v-flex xs4 style="font-size: .5em; text-align: left;">
-              {{ item.f2 }}<br>
+            <v-flex xs8 style="font-size: 1.25em; padding-top: 5px; padding-bottom: 0px"><b>{{ item.funcValue }}</b></v-flex>
+            <v-flex xs4 style="font-size: .5em">
+              {{ item.f2Name }}<br>
               <b style="font-size: 1.25em">{{ item.f2Value }}</b>
               <i v-if="item.f2Value > 0" class="material-icons md-16 green100">trending_up</i>
               <i v-else-if="item.f2Value == 0" class="material-icons md-16 yellow100">trending_flat</i>
@@ -127,31 +130,31 @@ body
         </v-card>
       </v-flex>
     </v-layout>
-    <v-layout row wrap v-for="item in chartInfo">
+    <v-layout row wrap text-xs-left v-for="(item,i) in chartInfo">
       <v-flex xs12 style="padding:2px 2px 0 2px">
         <v-card style="background-color: #364962; height: 88px; padding: 5px; box-shadow: none">
           <v-layout row wrap>
-            <v-flex xs4 style="font-size: .75em; text-align: left">{{ item.funcName }}</v-flex>
-            <v-flex xs3 style="font-size: .5em; text-align: left;">
-              {{ item.f1 }}<br>
+            <v-flex xs4 style="font-size: .75em" @click="goDetails">{{ item.funcName }}</v-flex>
+            <v-flex xs3 style="font-size: .5em">
+              {{ item.f1Name }}<br>
               <b style="font-size: 1.25em">{{ item.f1Value }}</b>
               <i v-if="item.f1Value > 0" class="material-icons md-16 green100">trending_up</i>
               <i v-else-if="item.f1Value == 0" class="material-icons md-16 yellow100">trending_flat</i>
               <i v-else-if="item.f1Value < 0" class="material-icons md-16 red100">trending_down</i>
             </v-flex>
             <v-flex xs1 style="padding-top: 8px"><div class="grey-bar"/></v-flex>
-            <v-flex xs3 style="font-size: .5em; text-align: left; padding-top: 5px">2017/10/11</v-flex>
-            <v-flex xs1><i class="material-icons md-24 grey100" @click="goDetails">more_horiz</i></v-flex>
-            <v-flex xs4 style="font-size: 1.25em; text-align: left" @click="goSettings"><b>{{ item.value }}</b></v-flex>
-            <v-flex xs3 style="font-size: .5em; text-align: left;">
-              {{ item.f2 }}<br>
+            <v-flex xs3 style="font-size: .5em; padding-top: 5px">{{ item.c1Name }}</v-flex>
+            <v-flex xs1><i class="material-icons md-24 grey100" @click="goDetails(i)">more_horiz</i></v-flex>
+            <v-flex xs4 style="font-size: 1.25em" @click="goDetails"><b>{{ item.funcValue }}</b></v-flex>
+            <v-flex xs3 style="font-size: .5em">
+              {{ item.f2Name }}<br>
               <b style="font-size: 1.25em">{{ item.f2Value }}</b>
               <i v-if="item.f2Value > 0" class="material-icons md-16 green100">trending_up</i>
               <i v-else-if="item.f2Value == 0" class="material-icons md-16 yellow100">trending_flat</i>
               <i v-else-if="item.f2Value < 0" class="material-icons md-16 red100">trending_down</i>
             </v-flex>
             <v-flex xs1 style="padding-top: 8px"><div class="cyan-bar"/></v-flex>
-            <v-flex xs4 style="font-size: .5em; text-align: left; padding-top: 5px">2017/11/11</v-flex>
+            <v-flex xs4 style="font-size: .5em; padding-top: 5px">{{ item.c2Name }}</v-flex>
             <v-flex xs4 style="padding: 0 0"><div class="under-bar"></div></v-flex>
           </v-layout>
         </v-card>
@@ -197,9 +200,66 @@ function addDate (dd, dadd) {
   return a.getFullYear() + '/' + (a.getMonth() + 1) + '/' + a.getDate()
 }
 
+function dateFormatted (params) {
+  return '<span style="font-size:12px; color: #00D7FB">' + params[0].name + ' : ' + params[0].value + '</span><br>' +
+                '<span style="font-size:12px; color: #6E88AC">' + addDate(params[0].name, -7) + ' : ' + params[1].value + '</span>'
+}
+
+var line = {
+  tooltip: {
+    trigger: 'axis',
+    axisPointer: {
+      animation: false
+    }
+  },
+  xAxis: {
+    type: 'category',
+    splitLine: {
+      show: false
+    },
+    axisLine: {
+      lineStyle: {
+        color: '#6E88AC'
+      }
+    },
+    data: []
+  },
+  yAxis: {
+    type: 'value',
+    boundaryGap: [0, '100%'],
+    splitLine: {
+      show: false
+    },
+    axisLine: {
+      lineStyle: {
+        color: '#6E88AC'
+      }
+    }
+  },
+  series: [{
+    type: 'line',
+    itemStyle: {
+      normal: {
+        color: '#00D7FB',
+        width: 1
+      }
+    },
+    data: []
+  },
+  {
+    type: 'line',
+    itemStyle: {
+      normal: {
+        color: '#6E88AC',
+        width: 1
+      }
+    },
+    data: []
+  }]
+}
+
 export default {
   data: () => ({
-    msg: 'Welcome to Your Vue.js App',
     items: [
       { text: '全部仓库' },
       { text: '上海1仓' },
@@ -208,209 +268,40 @@ export default {
       { text: '上海4仓' }
     ],
     e1: null,
-    username: this.$sysUser,
-    statDate: '2017/11/11',
-    boxInfo: [
-      {
-        funcName: '接收订单量',
-        value: '519,245',
-        f1: '日环比',
-        f1Value: 20.1,
-        f2: '周环比',
-        f2Value: -20.1
-      },
-      {
-        funcName: 'SKU准确率',
-        value: '58.21%',
-        f1: '日环比',
-        f1Value: -30.1,
-        f2: '周环比',
-        f2Value: 20.1
-      },
-      {
-        funcName: '调拨入库单数',
-        value: '86',
-        f1: '日环比',
-        f1Value: 0.0,
-        f2: '周环比',
-        f2Value: 20.1
-      }
-    ],
-    chartInfo: [
-      {
-        funcName: '接收订单量',
-        value: '519,245',
-        f1: '日环比',
-        f1Value: 20.1,
-        f2: '周环比',
-        f2Value: -20.1,
-        line: {
-          title: {
-            text: '动态数据 + 时间坐标轴',
-            show: false
-          },
-          tooltip: {
-            trigger: 'axis',
-            formatter: function (params) {
-              return '<span style="font-size:12px; color: #00D7FB">' + params[0].name + ' : ' + params[0].value + '</span><br>' +
-                '<span style="font-size:12px; color: #6E88AC">' + addDate(params[0].name, -7) + ' : ' + params[1].value + '</span>'
-            },
-            axisPointer: {
-              animation: false
-            }
-          },
-          xAxis: {
-            type: 'category',
-            splitLine: {
-              show: false
-            },
-            axisLine: {
-              lineStyle: {
-                color: '#6E88AC'
-              }
-            },
-            data: []
-          },
-          yAxis: {
-            type: 'value',
-            boundaryGap: [0, '100%'],
-            splitLine: {
-              show: false
-            },
-            axisLine: {
-              lineStyle: {
-                color: '#6E88AC'
-              }
-            }
-          },
-          series: [{
-            name: '2017/11/11',
-            type: 'line',
-            itemStyle: {
-              normal: {
-                color: '#00D7FB',
-                width: 1
-              }
-            },
-            data: []
-          },
-          {
-            name: '2017/10/11',
-            type: 'line',
-            itemStyle: {
-              normal: {
-                color: '#6E88AC',
-                width: 1
-              }
-            },
-            data: []
-          }]
-        }
-      },
-      {
-        funcName: 'SKU准确率',
-        value: '58.21%',
-        f1: '日环比',
-        f1Value: -30.1,
-        f2: '周环比',
-        f2Value: 20.1,
-        line: {
-          title: {
-            text: '动态数据 + 时间坐标轴',
-            show: false
-          },
-          tooltip: {
-            trigger: 'axis',
-            formatter: function (params) {
-              return '<span style="font-size:12px; color: #00D7FB">' + params[0].name + ' : ' + params[0].value + '</span><br>' +
-                '<span style="font-size:12px; color: #6E88AC">' + addDate(params[0].name, -7) + ' : ' + params[1].value + '</span>'
-            },
-            axisPointer: {
-              animation: false
-            }
-          },
-          xAxis: {
-            type: 'category',
-            splitLine: {
-              show: false
-            },
-            axisLine: {
-              lineStyle: {
-                color: '#6E88AC'
-              }
-            },
-            data: []
-          },
-          yAxis: {
-            type: 'value',
-            boundaryGap: [0, '100%'],
-            splitLine: {
-              show: false
-            },
-            axisLine: {
-              lineStyle: {
-                color: '#6E88AC'
-              }
-            }
-          },
-          series: [{
-            name: '2017/11/11',
-            type: 'line',
-            itemStyle: {
-              normal: {
-                color: '#00D7FB',
-                width: 1
-              }
-            },
-            data: []
-          },
-          {
-            name: '2017/10/11',
-            type: 'line',
-            itemStyle: {
-              normal: {
-                color: '#6E88AC',
-                width: 1
-              }
-            },
-            data: []
-          }]
-        }
-      }
-    ]
+    boxInfo: [],
+    chartInfo: []
   }),
-  computed: {
-    width: function () {
-      console.log(this.width)
-    }
-  },
   methods: {
     goSettings: function () {
       this.$router.push({ name: 'settings' })
     },
-    goDetails: function () {
-      this.$router.push({ name: 'detail' })
+    goDetails: function (i) {
+      this.$router.push({ name: 'detail', params: {chartInfo: this.chartInfo[i]} })
     }
   },
   mounted: function () {
     this.e1 = this.items[0]
-    let serverUrl = 'http://10.8.42.143:8080/dashboard-web/api/stat'
-    let lineDataUrl = serverUrl + '/c'
-    let periodUrl = serverUrl + '/periods'
-    axios.get(periodUrl)
+    let serverUrl = 'http://localhost:8080/dashboard-web/api/stat'
+    let boxesUrl = serverUrl + '/boxinfo'
+    let chartsUrl = serverUrl + '/chartinfo'
+    axios.get(boxesUrl)
       .then(function (res) {
-        this.chartInfo[0].line.xAxis.data = res.data
-        this.chartInfo[1].line.xAxis.data = res.data
+        this.boxInfo = res.data
       }.bind(this))
       .catch(function (err) {
         console.log(err)
       })
-    axios.get(lineDataUrl)
+    axios.get(chartsUrl)
       .then(function (res) {
-        this.chartInfo[0].line.series[0].data = res.data[0]
-        this.chartInfo[0].line.series[1].data = res.data[1]
-        this.chartInfo[1].line.series[0].data = res.data[2]
-        this.chartInfo[1].line.series[1].data = res.data[3]
+        this.chartInfo = res.data
+        console.log(res.data)
+        for (var i = 0; i <= res.data.length - 1; i++) {
+          this.chartInfo[i].line = JSON.parse(JSON.stringify(line))
+          this.chartInfo[i].line.xAxis.data = res.data[i].periods
+          this.chartInfo[i].line.series[0].data = res.data[i].c1Value
+          this.chartInfo[i].line.series[1].data = res.data[i].c2Value
+          this.chartInfo[i].line.tooltip.formatter = dateFormatted
+        }
       }.bind(this))
       .catch(function (err) {
         console.log(err)

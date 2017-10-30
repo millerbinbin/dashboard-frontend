@@ -22,8 +22,6 @@ const colorList = [
   '#ADADAD'
 ]
 const colorListLength = 20
-const sysUser = null
-const sysDate = null
 function getRandColor () {
   var tem = Math.round(Math.random() * colorListLength)
   return colorList[tem]

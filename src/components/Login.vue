@@ -150,13 +150,14 @@ export default {
   methods: {
     submit () {
       let serverUrl = 'http://10.8.42.143:8080/dashboard-web/api/stat'
+      this.username = this.username.toLowerCase()
       if (this.$refs.form.validate()) {
         axios.post(serverUrl + '/login', {
           username: this.username,
           password: this.password
         }).then(function (res) {
           if (res.data.errors === undefined || res.data.errors.length === 0) {
-            this.$sysUser = this.username
+            this.$store.commit('getUser', this.username)
             this.$router.push({ name: 'homepage' })
           } else {
             this.verified = false
@@ -169,6 +170,11 @@ export default {
           })
       }
     }
+  },
+  mounted: function () {
+    let a = new Date()
+    let b = a.getFullYear() + '/' + (a.getMonth() + 1) + '/' + a.getDate()
+    this.$store.commit('getDate', b)
   }
 }
 </script>
