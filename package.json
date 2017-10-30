@@ -14,18 +14,17 @@
     "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs"
   },
   "dependencies": {
-    "vee-validate": "^2.0.0-rc.19",
     "vue": "^2.5.2",
     "vue-devtools": "^3.1.9",
-    "vue-router": "^3.0.1"
-  },
-  "devDependencies": {
+    "vue-router": "^3.0.1",
     "axios": "^0.17.0",
     "awe-dnd": "^0.3.0",
+    "vue-echarts": "^2.4.1",
+    "vuetify": "^0.16.9"
+  },
+  "devDependencies": {
     "stylus-loader": "^3.0.1",
     "stylus": "^0.54.5",
-    "vue-echarts": "^2.4.1",
-    "vuetify": "^0.16.9",
     "autoprefixer": "^7.1.2",
     "babel-core": "^6.22.1",
     "babel-eslint": "^7.1.1",

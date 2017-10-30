@@ -3,6 +3,8 @@ import Router from 'vue-router'
 import Login from '@/components/Login'
 import HomePage from '@/components/HomePage'
 import Settings from '@/components/Settings'
+import DescPage from '@/components/DescPage'
+import DetailPage from '@/components/DetailPage'
 
 Vue.use(Router)
 
@@ -22,6 +24,16 @@ export default new Router({
       path: '/settings',
       name: 'settings',
       component: Settings
+    },
+    {
+      path: '/desc',
+      name: 'desc',
+      component: DescPage
+    },
+    {
+      path: '/detail',
+      name: 'detail',
+      component: DetailPage
     }
   ]
 })

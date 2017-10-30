@@ -73,105 +73,122 @@ body
 .menu__content
   color: #fbfdff
   background-color: #2E3C51
+  postion: fixed
 
 </style>
 
 <template>
-  <v-container grid-list-sm text-xs-center style="padding-top: 0px">
+  <v-container grid-list-xs text-xs-center style="padding-top: 0px">
+    <v-layout row wrap >
+      <v-flex xs1 style="text-align: right;">
+        <i class="material-icons grey100" @click="goback">navigate_before</i>
+      </v-flex>
+      <v-flex xs2 style="text-align: left;font-size: 1.25em" @click="goback">
+        返回
+      </v-flex>
+      <v-flex xs6>
+        <b style="font-size: 1.75em">成本效率</b>
+      </v-flex>
+    </v-layout>
     <v-layout row wrap style="background-color: #2E3C51; height: 60px; ">
-      <v-flex xs8>
+      <v-flex xs5>
         <v-select
-          v-bind:items="items"
+          v-bind:items="items_2"
+          v-model="e2"
+          item-text="text"
+          item-value="text"
+          single-line
+          bottom
+          style="width: 80%"
+        ></v-select>
+      </v-flex>
+      <v-flex xs5>
+        <v-select
+          v-bind:items="items_1"
           v-model="e1"
           item-text="text"
           item-value="text"
           single-line
           bottom
-          style="width: 50%"
+          style="width: 80%"
         ></v-select>
-      </v-flex>
-      <v-flex xs2 offset-xs2 style="padding-top: 21px">
-        <i class="material-icons md-24 grey100" @click=goSettings>settings</i>
       </v-flex>
     </v-layout>
     <v-layout row wrap>
       <v-flex xs6 style="font-size: .625em; text-align: left; padding-left: 5px; padding-top: 2px">{{ username }}</v-flex>
       <v-flex xs6 style="font-size: .625em; text-align: right; padding-right: 5px; padding-top: 2px">数据日期：{{ statDate}}</v-flex>
-      <v-flex xs6 v-for="item in boxInfo">
-        <v-card style="padding: 5px; background-color: #2E3C51; height: 88px">
-          <!-- <v-card-text class="px-0">6</v-card-text> -->
-          <v-layout row wrap>
-            <v-flex xs8 style="font-size: .75em; text-align: left; padding-top: 10px; padding-bottom: 0px">{{ item.funcName }}</v-flex>
-            <v-flex xs4 style="font-size: .5em; text-align: left;">
-              {{ item.f1 }}<br>
-              <b style="font-size: 1.25em">{{ item.f1Value }}</b>
-              <i v-if="item.f1Value > 0" class="material-icons md-16 green100">trending_up</i>
-              <i v-else-if="item.f1Value == 0" class="material-icons md-16 yellow100">trending_flat</i>
-              <i v-else-if="item.f1Value < 0" class="material-icons md-16 red100">trending_down</i>
-            </v-flex>
-            <v-flex xs8 style="font-size: 1.25em; text-align: left; padding-top: 5px; padding-bottom: 0px"><b>{{ item.value }}</b></v-flex>
-            <v-flex xs4 style="font-size: .5em; text-align: left;">
-              {{ item.f2 }}<br>
-              <b style="font-size: 1.25em">{{ item.f2Value }}</b>
-              <i v-if="item.f2Value > 0" class="material-icons md-16 green100">trending_up</i>
-              <i v-else-if="item.f2Value == 0" class="material-icons md-16 yellow100">trending_flat</i>
-              <i v-else-if="item.f2Value < 0" class="material-icons md-16 red100">trending_down</i>
-            </v-flex>
-            <v-flex xs8 style="padding: 0px"><div class="under-bar"></div></v-flex>
-          </v-layout>
-        </v-card>
-      </v-flex>
-      <v-flex v-if="boxInfo.length % 2" xs6>
-        <v-card style="padding: 5px; background-color: #2E3C51; height: 88px">
-          <i class="material-icons md-48 grey100" @click=goSettings style="margin-top: 20px;">add_circle</i>
-        </v-card>
-      </v-flex>
     </v-layout>
-    <v-layout row wrap v-for="item in chartInfo">
-      <v-flex xs12 style="padding:2px 2px 0 2px">
-        <v-card style="background-color: #364962; height: 88px; padding: 5px; box-shadow: none">
-          <v-layout row wrap>
-            <v-flex xs4 style="font-size: .75em; text-align: left">{{ item.funcName }}</v-flex>
-            <v-flex xs3 style="font-size: .5em; text-align: left;">
-              {{ item.f1 }}<br>
-              <b style="font-size: 1.25em">{{ item.f1Value }}</b>
-              <i v-if="item.f1Value > 0" class="material-icons md-16 green100">trending_up</i>
-              <i v-else-if="item.f1Value == 0" class="material-icons md-16 yellow100">trending_flat</i>
-              <i v-else-if="item.f1Value < 0" class="material-icons md-16 red100">trending_down</i>
-            </v-flex>
-            <v-flex xs1 style="padding-top: 8px"><div class="grey-bar"/></v-flex>
-            <v-flex xs3 style="font-size: .5em; text-align: left; padding-top: 5px">2017/10/11</v-flex>
-            <v-flex xs1><i class="material-icons md-24 grey100" @click="goDetails">more_horiz</i></v-flex>
-            <v-flex xs4 style="font-size: 1.25em; text-align: left" @click="goSettings"><b>{{ item.value }}</b></v-flex>
-            <v-flex xs3 style="font-size: .5em; text-align: left;">
-              {{ item.f2 }}<br>
-              <b style="font-size: 1.25em">{{ item.f2Value }}</b>
-              <i v-if="item.f2Value > 0" class="material-icons md-16 green100">trending_up</i>
-              <i v-else-if="item.f2Value == 0" class="material-icons md-16 yellow100">trending_flat</i>
-              <i v-else-if="item.f2Value < 0" class="material-icons md-16 red100">trending_down</i>
-            </v-flex>
-            <v-flex xs1 style="padding-top: 8px"><div class="cyan-bar"/></v-flex>
-            <v-flex xs4 style="font-size: .5em; text-align: left; padding-top: 5px">2017/11/11</v-flex>
-            <v-flex xs4 style="padding: 0 0"><div class="under-bar"></div></v-flex>
-          </v-layout>
-        </v-card>
-      </v-flex>
-      <v-flex xs12 style="padding:0px 2px 0 2px">
-        <v-card style="background-color: #2E3C51; height: 240px; padding: 5px; box-shadow: none">
-          <chart :options="item.line" style="height: 240px; width: 100vw"></chart>
-        </v-card>
-      </v-flex>
-    </v-layout>
-    <v-layout row wrap>
-      <v-flex xs12 style="padding-top: 4px">
-        <v-card style="height: 40px; background-color: #2E3C51">
-          <i class="material-icons md-32 grey100" @click=goSettings style="margin-top: 4px;">add_circle</i>
-        </v-card>
-      </v-flex>
-      <v-flex xs3 v-for="i in 8" :key="i">
-        <v-card style="padding: 3px; background-color: #2E3C51; font-size: .7em">客户调研活动</v-card>
-      </v-flex>
-    </v-layout>
+    <v-carousel hide-controls style="height: 360px" v-model="idx">
+      <v-carousel-item
+        v-for="(item,i) in chartInfo"
+        v-bind:key="i"
+        v-bind:src="item.funcName"
+        transition="fade"
+        reverseTransition="fade"
+      >
+      <v-layout row wrap>
+        <v-flex xs12 style="padding:2px 2px 0 2px; width: 100%; height: 88px">
+          <v-card style="background-color: #364962; height: 88px; padding: 5px; box-shadow: none">
+            <v-layout row wrap>
+              <v-flex xs4 style="font-size: .75em; text-align: left">{{ item.funcName }}</v-flex>
+              <v-flex xs3 style="font-size: .5em; text-align: left;">
+                {{ item.f1 }}<br>
+                <b style="font-size: 1.25em">{{ item.f1Value }}</b>
+                <i v-if="item.f1Value > 0" class="material-icons md-16 green100">trending_up</i>
+                <i v-else-if="item.f1Value == 0" class="material-icons md-16 yellow100">trending_flat</i>
+                <i v-else-if="item.f1Value < 0" class="material-icons md-16 red100">trending_down</i>
+              </v-flex>
+              <v-flex xs1 style="padding-top: 8px"><div class="grey-bar"/></v-flex>
+              <v-flex xs3 style="font-size: .5em; text-align: left; padding-top: 5px">2017/10/11</v-flex>
+              <v-flex xs4 style="font-size: 1.25em; text-align: left"><b>{{ item.value }}</b></v-flex>
+              <v-flex xs3 style="font-size: .5em; text-align: left;">
+                {{ item.f2 }}<br>
+                <b style="font-size: 1.25em">{{ item.f2Value }}</b>
+                <i v-if="item.f2Value > 0" class="material-icons md-16 green100">trending_up</i>
+                <i v-else-if="item.f2Value == 0" class="material-icons md-16 yellow100">trending_flat</i>
+                <i v-else-if="item.f2Value < 0" class="material-icons md-16 red100">trending_down</i>
+              </v-flex>
+              <v-flex xs1 style="padding-top: 8px"><div class="cyan-bar"/></v-flex>
+              <v-flex xs4 style="font-size: .5em; text-align: left; padding-top: 5px">2017/11/11</v-flex>
+              <v-flex xs4 style="padding: 0 0"><div class="under-bar"></div></v-flex>
+            </v-layout>
+          </v-card>
+        </v-flex>
+        <v-flex xs12 style="padding:0px 2px 0 2px; width: 100%; height: 240px">
+          <v-card style="background-color: #2E3C51; height: 240px; padding: 5px; box-shadow: none">
+            <chart :options="item.line" style="height: 240px; width: 320px"></chart>
+          </v-card>
+        </v-flex>
+          <v-flex xs12 style="padding:0px 2px 0 2px; width: 100%; height: 20px">
+          <span style="padding-right: 20px; font-size: .75em" v-for="(item, i) in index">
+            <i v-if="i!=idx" class="material-icons md-16 grey100">lens</i> 
+            <i v-else-if="i==idx" class="material-icons md-16 green100">lens</i>
+            {{ item }}
+          </span>
+        </v-flex>
+      </v-layout>
+    </v-carousel-item>
+  </v-carousel>
+
+<!--   <v-data-table
+      v-bind:headers="headers"
+      :items="items"
+      hide-actions
+      class="elevation-1"
+    >
+    <template slot="items" scope="props">
+      <td>{{ props.item.name }}</td>
+      <td class="text-xs-right">{{ props.item.calories }}</td>
+      <td class="text-xs-right">{{ props.item.fat }}</td>
+      <td class="text-xs-right">{{ props.item.carbs }}</td>
+      <td class="text-xs-right">{{ props.item.protein }}</td>
+      <td class="text-xs-right">{{ props.item.sodium }}</td>
+      <td class="text-xs-right">{{ props.item.calcium }}</td>
+      <td class="text-xs-right">{{ props.item.iron }}</td>
+    </template>
+  </v-data-table> -->
+
+
   </v-container>
 </template>
 
@@ -200,42 +217,24 @@ function addDate (dd, dadd) {
 export default {
   data: () => ({
     msg: 'Welcome to Your Vue.js App',
-    items: [
+    index: ['成本效率', '总工时', 'Units'],
+    idx: 0,
+    items_1: [
       { text: '全部仓库' },
       { text: '上海1仓' },
       { text: '上海2仓' },
       { text: '上海3仓' },
       { text: '上海4仓' }
     ],
-    e1: null,
-    username: this.$sysUser,
-    statDate: '2017/11/11',
-    boxInfo: [
-      {
-        funcName: '接收订单量',
-        value: '519,245',
-        f1: '日环比',
-        f1Value: 20.1,
-        f2: '周环比',
-        f2Value: -20.1
-      },
-      {
-        funcName: 'SKU准确率',
-        value: '58.21%',
-        f1: '日环比',
-        f1Value: -30.1,
-        f2: '周环比',
-        f2Value: 20.1
-      },
-      {
-        funcName: '调拨入库单数',
-        value: '86',
-        f1: '日环比',
-        f1Value: 0.0,
-        f2: '周环比',
-        f2Value: 20.1
-      }
+    items_2: [
+      { text: '日维度' },
+      { text: '周维度' },
+      { text: '月维度' }
     ],
+    e1: null,
+    e2: null,
+    username: 'admin',
+    statDate: '2017/11/11',
     chartInfo: [
       {
         funcName: '接收订单量',
@@ -308,12 +307,12 @@ export default {
         }
       },
       {
-        funcName: 'SKU准确率',
-        value: '58.21%',
+        funcName: '总工时',
+        value: '59,218',
         f1: '日环比',
-        f1Value: -30.1,
+        f1Value: 10.1,
         f2: '周环比',
-        f2Value: 20.1,
+        f2Value: 11.2,
         line: {
           title: {
             text: '动态数据 + 时间坐标轴',
@@ -385,15 +384,13 @@ export default {
     }
   },
   methods: {
-    goSettings: function () {
-      this.$router.push({ name: 'settings' })
-    },
-    goDetails: function () {
-      this.$router.push({ name: 'detail' })
+    goback: function () {
+      this.$router.go(-1)
     }
   },
   mounted: function () {
-    this.e1 = this.items[0]
+    this.e1 = this.items_1[0]
+    this.e2 = this.items_2[0]
     let serverUrl = 'http://10.8.42.143:8080/dashboard-web/api/stat'
     let lineDataUrl = serverUrl + '/c'
     let periodUrl = serverUrl + '/periods'

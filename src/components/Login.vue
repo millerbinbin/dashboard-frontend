@@ -149,13 +149,14 @@ export default {
   }),
   methods: {
     submit () {
-      let serverUrl = 'http://192.168.199.200:8080/hydra-man-web/api/stat'
+      let serverUrl = 'http://10.8.42.143:8080/dashboard-web/api/stat'
       if (this.$refs.form.validate()) {
         axios.post(serverUrl + '/login', {
           username: this.username,
           password: this.password
         }).then(function (res) {
           if (res.data.errors === undefined || res.data.errors.length === 0) {
+            this.$sysUser = this.username
             this.$router.push({ name: 'homepage' })
           } else {
             this.verified = false
