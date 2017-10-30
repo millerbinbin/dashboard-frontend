@@ -275,7 +275,7 @@ var line = {
 export default {
   data: () => ({
     msg: 'Welcome to Your Vue.js App',
-    index: ['成本效率', '总工时', 'Units'],
+    index: [],
     idx: 0,
     items_1: [
       { text: '全部仓库' },
@@ -295,144 +295,8 @@ export default {
     statDate: '2017/11/11',
     chartInfo: [
       {
-        funcName: '接收订单量',
-        value: '519,245',
-        f1: '日环比',
-        f1Value: 20.1,
-        f2: '周环比',
-        f2Value: -20.1,
-        line: {
-          title: {
-            text: '动态数据 + 时间坐标轴',
-            show: false
-          },
-          tooltip: {
-            trigger: 'axis',
-            formatter: function (params) {
-              return '<span style="font-size:12px; color: #00D7FB">' + params[0].name + ' : ' + params[0].value + '</span><br>' +
-                '<span style="font-size:12px; color: #6E88AC">' + addDate(params[0].name, -7) + ' : ' + params[1].value + '</span>'
-            },
-            axisPointer: {
-              animation: false
-            }
-          },
-          xAxis: {
-            type: 'category',
-            splitLine: {
-              show: false
-            },
-            axisLine: {
-              lineStyle: {
-                color: '#6E88AC'
-              }
-            },
-            data: []
-          },
-          yAxis: {
-            type: 'value',
-            boundaryGap: [0, '100%'],
-            splitLine: {
-              show: false
-            },
-            axisLine: {
-              lineStyle: {
-                color: '#6E88AC'
-              }
-            }
-          },
-          series: [{
-            name: '2017/11/11',
-            type: 'line',
-            itemStyle: {
-              normal: {
-                color: '#00D7FB',
-                width: 1
-              }
-            },
-            data: []
-          },
-          {
-            name: '2017/10/11',
-            type: 'line',
-            itemStyle: {
-              normal: {
-                color: '#6E88AC',
-                width: 1
-              }
-            },
-            data: []
-          }]
-        }
       },
       {
-        funcName: '总工时',
-        value: '59,218',
-        f1: '日环比',
-        f1Value: 10.1,
-        f2: '周环比',
-        f2Value: 11.2,
-        line: {
-          title: {
-            text: '动态数据 + 时间坐标轴',
-            show: false
-          },
-          tooltip: {
-            trigger: 'axis',
-            formatter: function (params) {
-              return '<span style="font-size:12px; color: #00D7FB">' + params[0].name + ' : ' + params[0].value + '</span><br>' +
-                '<span style="font-size:12px; color: #6E88AC">' + addDate(params[0].name, -7) + ' : ' + params[1].value + '</span>'
-            },
-            axisPointer: {
-              animation: false
-            }
-          },
-          xAxis: {
-            type: 'category',
-            splitLine: {
-              show: false
-            },
-            axisLine: {
-              lineStyle: {
-                color: '#6E88AC'
-              }
-            },
-            data: []
-          },
-          yAxis: {
-            type: 'value',
-            boundaryGap: [0, '100%'],
-            splitLine: {
-              show: false
-            },
-            axisLine: {
-              lineStyle: {
-                color: '#6E88AC'
-              }
-            }
-          },
-          series: [{
-            name: '2017/11/11',
-            type: 'line',
-            itemStyle: {
-              normal: {
-                color: '#00D7FB',
-                width: 1
-              }
-            },
-            data: []
-          },
-          {
-            name: '2017/10/11',
-            type: 'line',
-            itemStyle: {
-              normal: {
-                color: '#6E88AC',
-                width: 1
-              }
-            },
-            data: []
-          }]
-        }
       }
     ]
   }),
@@ -454,13 +318,13 @@ export default {
     axios.get(chartsUrl)
       .then(function (res) {
         this.chartInfo = res.data
-        console.log(res.data)
         for (var i = 0; i <= res.data.length - 1; i++) {
           this.chartInfo[i].line = JSON.parse(JSON.stringify(line))
           this.chartInfo[i].line.xAxis.data = res.data[i].periods
           this.chartInfo[i].line.series[0].data = res.data[i].c1Value
           this.chartInfo[i].line.series[1].data = res.data[i].c2Value
           this.chartInfo[i].line.tooltip.formatter = dateFormatted
+          this.index.push(res.data[i].funcName)
         }
       }.bind(this))
       .catch(function (err) {

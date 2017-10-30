@@ -149,7 +149,7 @@ export default {
   }),
   methods: {
     submit () {
-      let serverUrl = 'http://10.8.42.143:8080/dashboard-web/api/stat'
+      let serverUrl = 'http://localhost:8080/dashboard-web/api/stat'
       this.username = this.username.toLowerCase()
       if (this.$refs.form.validate()) {
         axios.post(serverUrl + '/login', {

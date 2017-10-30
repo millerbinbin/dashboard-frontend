@@ -74,13 +74,11 @@ body
   color: #fbfdff
   background-color: #2E3C51
 
-.custom
-  background-color: #2E3C51
 </style>
 
 <template>
   <v-container grid-list-sm text-xs-center pt-0>
-    <v-layout row wrap custom style="height: 60px; ">
+    <v-layout row wrap style="height: 60px; ">
       <v-flex xs8>
         <v-card>
           <v-select
@@ -125,7 +123,7 @@ body
         </v-card>
       </v-flex>
       <v-flex v-if="boxInfo.length % 2" xs6>
-        <v-card style="padding: 5px; background-color: #2E3C51; height: 88px">
+        <v-card style="padding: 5px; background-color: #2E3C51; height: 88px; text-align: center">
           <i class="material-icons md-48 grey100" @click=goSettings style="margin-top: 20px;">add_circle</i>
         </v-card>
       </v-flex>
@@ -293,14 +291,25 @@ export default {
       })
     axios.get(chartsUrl)
       .then(function (res) {
-        this.chartInfo = res.data
-        console.log(res.data)
         for (var i = 0; i <= res.data.length - 1; i++) {
-          this.chartInfo[i].line = JSON.parse(JSON.stringify(line))
-          this.chartInfo[i].line.xAxis.data = res.data[i].periods
-          this.chartInfo[i].line.series[0].data = res.data[i].c1Value
-          this.chartInfo[i].line.series[1].data = res.data[i].c2Value
-          this.chartInfo[i].line.tooltip.formatter = dateFormatted
+          let tmpData = res.data[i]
+          let pline = JSON.parse(JSON.stringify(line))
+          pline.xAxis.data = tmpData.periods
+          pline.series[0].data = tmpData.c1Value
+          pline.series[1].data = tmpData.c2Value
+          pline.tooltip.formatter = dateFormatted
+          let option = {
+            funcName: tmpData.funcName,
+            funcValue: tmpData.funcValue,
+            f1Name: tmpData.f1Name,
+            f1Value: tmpData.f1Value,
+            f2Name: tmpData.f2Name,
+            f2Value: tmpData.f2Value,
+            c1Name: tmpData.c1Name,
+            c2Name: tmpData.c2Name,
+            line: pline
+          }
+          this.chartInfo.push(option)
         }
       }.bind(this))
       .catch(function (err) {
