@@ -73,7 +73,24 @@ body
 .menu__content
   color: #fbfdff
   background-color: #2E3C51
-  postion: fixed
+
+@media (min-width 320px)
+  .card
+    .echarts
+      width: 320px
+      height: 240px
+
+@media (min-width 480px)
+  .card
+    .echarts
+      width: 440px
+      height: 240px
+
+@media (min-width 960px)
+  .card
+    .echarts
+      width: 900px
+      height: 240px
 
 </style>
 
@@ -83,35 +100,19 @@ body
       <v-flex xs1 style="text-align: right;">
         <i class="material-icons grey100" @click="goback">navigate_before</i>
       </v-flex>
-      <v-flex xs2 style="text-align: left;font-size: 1.25em" @click="goback">
+      <v-flex xs2 style="text-align: left;font-size: 1em" @click="goback">
         返回
       </v-flex>
       <v-flex xs6>
-        <b style="font-size: 1.75em">成本效率</b>
+        <b style="font-size: 1.5em">{{ this.$route.params.chartInfo.funcName }}</b>
       </v-flex>
     </v-layout>
     <v-layout row wrap style="background-color: #2E3C51; height: 60px; ">
-      <v-flex xs5>
-        <v-select
-          v-bind:items="items_2"
-          v-model="e2"
-          item-text="text"
-          item-value="text"
-          single-line
-          bottom
-          style="width: 80%"
-        ></v-select>
+      <v-flex xs4>
+        <v-select v-bind:items="$store.state.warehouseList" v-model="e1" item-text="name" item-value="id" single-line bottom style="width: 90%"></v-select>
       </v-flex>
-      <v-flex xs5>
-        <v-select
-          v-bind:items="items_1"
-          v-model="e1"
-          item-text="text"
-          item-value="text"
-          single-line
-          bottom
-          style="width: 80%"
-        ></v-select>
+      <v-flex xs4>
+        <v-select v-bind:items="$store.state.dateCycleList" v-model="e2" item-text="name" item-value="id" single-line bottom style="width: 90%"></v-select>
       </v-flex>
     </v-layout>
     <v-layout row wrap>
@@ -126,49 +127,49 @@ body
         transition="fade"
         reverseTransition="fade"
       >
-      <v-layout row wrap>
-        <v-flex xs12 style="padding:2px 2px 0 2px; width: 100%; height: 88px">
-          <v-card style="background-color: #364962; height: 88px; padding: 5px; box-shadow: none">
-            <v-layout row wrap>
-              <v-flex xs4 style="font-size: .75em; text-align: left">{{ item.funcName }}</v-flex>
-              <v-flex xs3 style="font-size: .5em; text-align: left;">
-                {{ item.f1Name }}<br>
-                <b style="font-size: 1.25em">{{ item.f1Value }}</b>
-                <i v-if="item.f1Value > 0" class="material-icons md-16 green100">trending_up</i>
-                <i v-else-if="item.f1Value == 0" class="material-icons md-16 yellow100">trending_flat</i>
-                <i v-else-if="item.f1Value < 0" class="material-icons md-16 red100">trending_down</i>
-              </v-flex>
-              <v-flex xs1 style="padding-top: 8px"><div class="grey-bar"/></v-flex>
-              <v-flex xs3 style="font-size: .5em; text-align: left; padding-top: 5px">2017/10/11</v-flex>
-              <v-flex xs4 style="font-size: 1.25em; text-align: left"><b>{{ item.funcValue }}</b></v-flex>
-              <v-flex xs3 style="font-size: .5em; text-align: left;">
-                {{ item.f2Name }}<br>
-                <b style="font-size: 1.25em">{{ item.f2Value }}</b>
-                <i v-if="item.f2Value > 0" class="material-icons md-16 green100">trending_up</i>
-                <i v-else-if="item.f2Value == 0" class="material-icons md-16 yellow100">trending_flat</i>
-                <i v-else-if="item.f2Value < 0" class="material-icons md-16 red100">trending_down</i>
-              </v-flex>
-              <v-flex xs1 style="padding-top: 8px"><div class="cyan-bar"/></v-flex>
-              <v-flex xs4 style="font-size: .5em; text-align: left; padding-top: 5px">{{ item.c2Name}}</v-flex>
-              <v-flex xs4 style="padding: 0 0"><div class="under-bar"></div></v-flex>
-            </v-layout>
-          </v-card>
-        </v-flex>
-        <v-flex xs12 style="padding:0px 2px 0 2px; width: 100%; height: 240px">
-          <v-card style="background-color: #2E3C51; height: 240px; padding: 5px; box-shadow: none">
-            <chart :options="item.line" style="height: 240px; width: 320px"></chart>
-          </v-card>
-        </v-flex>
-          <v-flex xs12 style="padding:0px 2px 0 2px; width: 100%; height: 20px">
-          <span style="padding-right: 20px; font-size: .75em" v-for="(item, i) in index">
-            <i v-if="i!=idx" class="material-icons md-16 grey100">lens</i> 
-            <i v-else-if="i==idx" class="material-icons md-16 green100">lens</i>
-            {{ item }}
-          </span>
-        </v-flex>
-      </v-layout>
-    </v-carousel-item>
-  </v-carousel>
+        <v-layout row wrap>
+          <v-flex xs12 style="padding:2px 2px 0 2px; width: 100%; height: 88px">
+            <v-card style="background-color: #364962; height: 88px; padding: 5px; box-shadow: none">
+              <v-layout row wrap>
+                <v-flex xs4 style="font-size: .75em; text-align: left">{{ item.funcName }}</v-flex>
+                <v-flex xs3 style="font-size: .5em; text-align: left;">
+                  {{ item.f1Name }}<br>
+                  <b style="font-size: 1.25em">{{ item.f1Value }}%</b>
+                  <i v-if="item.f1Value > 0" class="material-icons md-16 green100">trending_up</i>
+                  <i v-else-if="item.f1Value == 0" class="material-icons md-16 yellow100">trending_flat</i>
+                  <i v-else-if="item.f1Value < 0" class="material-icons md-16 red100">trending_down</i>
+                </v-flex>
+                <v-flex xs1 style="padding-top: 8px"><div class="grey-bar"/></v-flex>
+                <v-flex xs3 style="font-size: .5em; text-align: left; padding-top: 5px">2017/10/11</v-flex>
+                <v-flex xs4 style="font-size: 1.25em; text-align: left"><b>{{ item.funcValue }}</b></v-flex>
+                <v-flex xs3 style="font-size: .5em; text-align: left;">
+                  {{ item.f2Name }}<br>
+                  <b style="font-size: 1.25em">{{ item.f2Value }}%</b>
+                  <i v-if="item.f2Value > 0" class="material-icons md-16 green100">trending_up</i>
+                  <i v-else-if="item.f2Value == 0" class="material-icons md-16 yellow100">trending_flat</i>
+                  <i v-else-if="item.f2Value < 0" class="material-icons md-16 red100">trending_down</i>
+                </v-flex>
+                <v-flex xs1 style="padding-top: 8px"><div class="cyan-bar"/></v-flex>
+                <v-flex xs4 style="font-size: .5em; text-align: left; padding-top: 5px">{{ item.c2Name}}</v-flex>
+                <v-flex xs4 style="padding: 0 0"><div class="under-bar"></div></v-flex>
+              </v-layout>
+            </v-card>
+          </v-flex>
+          <v-flex xs12 style="padding:0px 2px 0 2px; width: 100%; height: 240px">
+            <v-card style="background-color: #2E3C51; height: 240px; padding: 5px; box-shadow: none">
+              <chart :options="item.line" style="height: 240px; width: 320px"></chart>
+            </v-card>
+          </v-flex>
+            <v-flex xs12 style="padding:0px 2px 0 2px; width: 100%; height: 20px">
+            <span style="padding-right: 20px; font-size: .75em" v-for="(item, i) in index">
+              <i v-if="i!=idx" class="material-icons md-16 grey100">lens</i> 
+              <i v-else-if="i==idx" class="material-icons md-16 green100">lens</i>
+              {{ item }}
+            </span>
+          </v-flex>
+        </v-layout>
+      </v-carousel-item>
+    </v-carousel>
 
 <!--   <v-data-table
       v-bind:headers="headers"
@@ -187,7 +188,6 @@ body
       <td class="text-xs-right">{{ props.item.iron }}</td>
     </template>
   </v-data-table> -->
-
 
   </v-container>
 </template>
@@ -274,45 +274,20 @@ var line = {
 
 export default {
   data: () => ({
-    msg: 'Welcome to Your Vue.js App',
     index: [],
     idx: 0,
-    items_1: [
-      { text: '全部仓库' },
-      { text: '上海1仓' },
-      { text: '上海2仓' },
-      { text: '上海3仓' },
-      { text: '上海4仓' }
-    ],
-    items_2: [
-      { text: '日维度' },
-      { text: '周维度' },
-      { text: '月维度' }
-    ],
     e1: null,
     e2: null,
-    username: 'admin',
-    statDate: '2017/11/11',
-    chartInfo: [
-      {
-      },
-      {
-      }
-    ]
+    chartInfo: [{}, {}]
   }),
-  computed: {
-    width: function () {
-      console.log(this.width)
-    }
-  },
   methods: {
     goback: function () {
       this.$router.go(-1)
     }
   },
   mounted: function () {
-    this.e1 = this.items_1[0]
-    this.e2 = this.items_2[0]
+    this.e1 = this.$store.state.warehouseList[0]
+    this.e2 = this.$store.state.dateCycleList[0]
     let serverUrl = 'http://localhost:8080/dashboard-web/api/stat'
     let chartsUrl = serverUrl + '/chartinfo'
     axios.get(chartsUrl)

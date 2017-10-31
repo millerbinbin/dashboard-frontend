@@ -95,7 +95,7 @@ body
     <v-layout row wrap>
       <v-flex xs12 style="text-align: left">数据框</v-flex>
       <v-flex xs12>
-        <v-card draggable="true" style="margin-top: 2px" v-for="(item, index) in boxList" v-dragging="{ item: item, list: boxList, group: 'box' }" :key="item.text">
+        <v-card draggable="true" style="margin-top: 2px" v-model="e1" v-for="(item, index) in boxList" v-dragging="{ item: item, list: boxList, group: 'box' }" :key="item.text">
           <i class="material-icons md-16 red100" @click="removeBoxItem(index)">remove_circle</i>{{item.text}}
       	</v-card>
       </v-flex>
@@ -128,35 +128,15 @@ body
 <script>
 import Vue from 'vue'
 import VueDND from 'awe-dnd'
+import axios from 'axios'
 Vue.use(VueDND)
+
 export default {
   data: () => ({
-    msg: 'Welcome to Your Vue.js App',
-    boxList: [{
-      text: '接收订单量'
-    }, {
-      text: 'Sku准确率'
-    }, {
-      text: '调拨入库单数'
-    }, {
-      text: '发出订单量'
-    }, {
-      text: '在库Sku'
-    }],
-    chartList: [{
-      text: '人效-DO'
-    }, {
-      text: '成本效率'
-    }],
-    freeList: [{
-      text: '测试1'
-    }, {
-      text: '测试2'
-    }, {
-      text: '测试3'
-    }, {
-      text: '测试4'
-    }]
+    e1: null,
+    boxList: [],
+    chartList: [],
+    freeList: []
   }),
   methods: {
     goback: function () {
@@ -178,15 +158,38 @@ export default {
       this.boxList.push({text: v})
     },
     goLogin: function () {
+      let serverUrl = 'http://localhost:8080/dashboard-web/api'
+      let funcUrl = serverUrl + '/func'
+      let funcList = []
+      for (var i = this.boxList.length - 1; i >= 0; i--) {
+        funcList.push({funcName: this.boxList[i].text, funcType: 0, seq: i})
+      }
+      for (i = this.chartList.length - 1; i >= 0; i--) {
+        funcList.push({funcName: this.chartList[i].text, funcType: 1, seq: i})
+      }
+      for (i = this.freeList.length - 1; i >= 0; i--) {
+        funcList.push({funcName: this.freeList[i].text, funcType: 2, seq: i})
+      }
+      axios.put(funcUrl, funcList)
+        .then(function (res) {
+        })
+        .catch(function (err) {
+          console.log(err)
+        })
       this.$router.push({name: 'login'})
     }
   },
   mounted () {
     this.$dragging.$on('dragged', ({ value }) => {
-      console.log(value.item)
-      console.log(value.list)
-      console.log(value.otherData)
     })
+    this.boxList = this.$store.state.boxList
+    this.chartList = this.$store.state.chartList
+    this.freeList = this.$store.state.freeList
+  },
+  updated () {
+    this.$store.commit('updateList', {type: 0, list: this.boxList})
+    this.$store.commit('updateList', {type: 1, list: this.chartList})
+    this.$store.commit('updateList', {type: 2, list: this.freeList})
   }
 }
 </script>

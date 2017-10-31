@@ -84,7 +84,7 @@ body
       <v-flex xs6 offset-xs3>
         <v-form v-model="valid" ref="form">
           <v-text-field
-            label="用户名"
+            label="账号"
             v-model="username"
             :rules="nameRules"
             required
@@ -96,7 +96,7 @@ body
             type="password"
             required
           ></v-text-field>
-          <v-alert v-show="!verified" color="error" icon="warning" value="true">
+          <v-alert v-show="!verified" color="error" icon="warning" style="font-size: .75em" value="true">
             {{ errorMsg }}
           </v-alert>
           <v-layout row wrap>
@@ -127,6 +127,7 @@ import 'vuetify/dist/vuetify.min.css'
 import axios from 'axios'
 Vue.use(Vuetify)
 
+let serverUrl = 'http://localhost:8080/dashboard-web/api'
 export default {
   data: () => ({
     msg: 'Welcome to Your Vue.js App',
@@ -137,7 +138,7 @@ export default {
     errorMsg: null,
     username: null,
     nameRules: [
-      (v) => !!v || '用户名不能为空'
+      (v) => !!v || '账号不能为空'
     ],
     password: null,
     mobile: null,
@@ -148,16 +149,59 @@ export default {
     autoLogin: true
   }),
   methods: {
+    getConf () {
+      let funcUrl = serverUrl + '/func'
+      axios.get(funcUrl)
+        .then(function (res) {
+          let boxList = []
+          let chartList = []
+          let freeList = []
+          for (var i = 0; i <= res.data.length - 1; i++) {
+            let tmpData = res.data[i]
+            if (tmpData.funcType === 0) boxList.push({text: tmpData.funcName})
+            else if (tmpData.funcType === 1) chartList.push({text: tmpData.funcName})
+            else if (tmpData.funcType === 2) freeList.push({text: tmpData.funcName})
+          }
+          this.$store.commit('updateList', {type: 0, list: boxList})
+          this.$store.commit('updateList', {type: 1, list: chartList})
+          this.$store.commit('updateList', {type: 2, list: freeList})
+        }.bind(this))
+        .catch(function (err) {
+          console.log(err)
+        })
+    },
+    getWarehouse () {
+      let warehouseUrl = serverUrl + '/dim/warehouse'
+      axios.get(warehouseUrl)
+        .then(function (res) {
+          this.$store.commit('getWarehouse', res.data)
+        }.bind(this))
+        .catch(function (err) {
+          console.log(err)
+        })
+    },
+    getDateCycle () {
+      let dateCycleUrl = serverUrl + '/dim/datecycle'
+      axios.get(dateCycleUrl)
+        .then(function (res) {
+          this.$store.commit('getDateCycle', res.data)
+        }.bind(this))
+        .catch(function (err) {
+          console.log(err)
+        })
+    },
     submit () {
-      let serverUrl = 'http://localhost:8080/dashboard-web/api/stat'
       this.username = this.username.toLowerCase()
       if (this.$refs.form.validate()) {
-        axios.post(serverUrl + '/login', {
+        axios.post(serverUrl + '/user/login', {
           username: this.username,
           password: this.password
         }).then(function (res) {
           if (res.data.errors === undefined || res.data.errors.length === 0) {
             this.$store.commit('getUser', this.username)
+            this.getConf()
+            this.getWarehouse()
+            this.getDateCycle()
             this.$router.push({ name: 'homepage' })
           } else {
             this.verified = false

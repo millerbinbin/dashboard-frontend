@@ -11,7 +11,12 @@ Vue.config.productionTip = false
 const store = new Vuex.Store({
   state: {
     sysUser: 'aa',
-    sysDate: 'date'
+    sysDate: 'date',
+    boxList: [],
+    chartList: [],
+    freeList: [],
+    warehouseList: [],
+    dateCycleList: []
   },
   mutations: {
     getUser (state, username) {
@@ -19,6 +24,17 @@ const store = new Vuex.Store({
     },
     getDate (state, currentDate) {
       state.sysDate = currentDate
+    },
+    updateList (state, item) {
+      if (item.type === 0) state.boxList = item.list
+      else if (item.type === 1) state.chartList = item.list
+      else if (item.type === 2) state.freeList = item.list
+    },
+    getWarehouse (state, list) {
+      state.warehouseList = list
+    },
+    getDateCycle (state, list) {
+      state.dateCycleList = list
     }
   },
   getters: {

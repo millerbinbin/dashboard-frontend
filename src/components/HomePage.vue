@@ -74,23 +74,40 @@ body
   color: #fbfdff
   background-color: #2E3C51
 
+@media (min-width 320px)
+  .card
+    .echarts
+      width: 320px
+      height: 240px
+
+@media (min-width 480px)
+  .card
+    .echarts
+      width: 440px
+      height: 240px
+
+@media (min-width 960px)
+  .card
+    .echarts
+      width: 900px
+      height: 240px
+
+
 </style>
 
 <template>
   <v-container grid-list-sm text-xs-center pt-0>
     <v-layout row wrap style="height: 60px; ">
       <v-flex xs8>
-        <v-card>
-          <v-select
-            v-bind:items="items"
-            v-model="e1"
-            item-text="text"
-            item-value="text"
-            single-line
-            bottom
-            style="width: 50%"
-          ></v-select>
-        </v-card>
+        <v-select
+          v-bind:items="$store.state.warehouseList"
+          v-model="e1"
+          item-text="name"
+          item-value="id"
+          single-line
+          bottom
+          style="width: 50%"
+        ></v-select>
       </v-flex>
       <v-flex xs2 offset-xs2 style="padding-top: 21px">
         <i class="material-icons md-24 grey100" @click=goSettings>settings</i>
@@ -105,7 +122,7 @@ body
             <v-flex xs8 style="font-size: .75em; padding-top: 10px; padding-bottom: 0px">{{ item.funcName }}</v-flex>
             <v-flex xs4 style="font-size: .5em">
               {{ item.f1Name }}<br>
-              <b style="font-size: 1.25em">{{ item.f1Value }}</b>
+              <b style="font-size: 1.25em">{{ item.f1Value }}%</b>
               <i v-if="item.f1Value > 0" class="material-icons md-16 green100">trending_up</i>
               <i v-else-if="item.f1Value == 0" class="material-icons md-16 yellow100">trending_flat</i>
               <i v-else-if="item.f1Value < 0" class="material-icons md-16 red100">trending_down</i>
@@ -113,7 +130,7 @@ body
             <v-flex xs8 style="font-size: 1.25em; padding-top: 5px; padding-bottom: 0px"><b>{{ item.funcValue }}</b></v-flex>
             <v-flex xs4 style="font-size: .5em">
               {{ item.f2Name }}<br>
-              <b style="font-size: 1.25em">{{ item.f2Value }}</b>
+              <b style="font-size: 1.25em">{{ item.f2Value }}%</b>
               <i v-if="item.f2Value > 0" class="material-icons md-16 green100">trending_up</i>
               <i v-else-if="item.f2Value == 0" class="material-icons md-16 yellow100">trending_flat</i>
               <i v-else-if="item.f2Value < 0" class="material-icons md-16 red100">trending_down</i>
@@ -135,7 +152,7 @@ body
             <v-flex xs4 style="font-size: .75em" @click="goDetails">{{ item.funcName }}</v-flex>
             <v-flex xs3 style="font-size: .5em">
               {{ item.f1Name }}<br>
-              <b style="font-size: 1.25em">{{ item.f1Value }}</b>
+              <b style="font-size: 1.25em">{{ item.f1Value }}%</b>
               <i v-if="item.f1Value > 0" class="material-icons md-16 green100">trending_up</i>
               <i v-else-if="item.f1Value == 0" class="material-icons md-16 yellow100">trending_flat</i>
               <i v-else-if="item.f1Value < 0" class="material-icons md-16 red100">trending_down</i>
@@ -146,7 +163,7 @@ body
             <v-flex xs4 style="font-size: 1.25em" @click="goDetails"><b>{{ item.funcValue }}</b></v-flex>
             <v-flex xs3 style="font-size: .5em">
               {{ item.f2Name }}<br>
-              <b style="font-size: 1.25em">{{ item.f2Value }}</b>
+              <b style="font-size: 1.25em">{{ item.f2Value }}%</b>
               <i v-if="item.f2Value > 0" class="material-icons md-16 green100">trending_up</i>
               <i v-else-if="item.f2Value == 0" class="material-icons md-16 yellow100">trending_flat</i>
               <i v-else-if="item.f2Value < 0" class="material-icons md-16 red100">trending_down</i>
@@ -159,7 +176,7 @@ body
       </v-flex>
       <v-flex xs12 style="padding:0px 2px 0 2px">
         <v-card style="background-color: #2E3C51; height: 240px; padding: 5px; box-shadow: none">
-          <chart :options="item.line" style="height: 240px; width: 100vw"></chart>
+          <chart :options="item.line"></chart>
         </v-card>
       </v-flex>
     </v-layout>
@@ -258,13 +275,6 @@ var line = {
 
 export default {
   data: () => ({
-    items: [
-      { text: '全部仓库' },
-      { text: '上海1仓' },
-      { text: '上海2仓' },
-      { text: '上海3仓' },
-      { text: '上海4仓' }
-    ],
     e1: null,
     boxInfo: [],
     chartInfo: []
@@ -277,11 +287,21 @@ export default {
       this.$router.push({ name: 'detail', params: {chartInfo: this.chartInfo[i]} })
     }
   },
+  created: function () {
+    this.e1 = this.$store.state.warehouseList[0]
+  },
   mounted: function () {
-    this.e1 = this.items[0]
-    let serverUrl = 'http://localhost:8080/dashboard-web/api/stat'
-    let boxesUrl = serverUrl + '/boxinfo'
-    let chartsUrl = serverUrl + '/chartinfo'
+    let serverUrl = 'http://localhost:8080/dashboard-web/api'
+    let boxesUrl = serverUrl + '/stat/boxinfo'
+    let chartsUrl = serverUrl + '/stat/chartinfo'
+    let resUrl = serverUrl + '/stat/res'
+    axios.post(resUrl, {funcName: '接收订单量', warehouse: '上海1仓'})
+      .then(function (res) {
+        console.log(res.data)
+      })
+      .catch(function (err) {
+        console.log(err)
+      })
     axios.get(boxesUrl)
       .then(function (res) {
         this.boxInfo = res.data
