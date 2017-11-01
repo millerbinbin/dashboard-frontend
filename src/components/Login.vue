@@ -127,7 +127,7 @@ import 'vuetify/dist/vuetify.min.css'
 import axios from 'axios'
 Vue.use(Vuetify)
 
-let serverUrl = 'http://localhost:8080/dashboard-web/api'
+let serverUrl = 'http://10.8.42.143:8080/dashboard-web/api'
 export default {
   data: () => ({
     msg: 'Welcome to Your Vue.js App',
@@ -146,7 +146,8 @@ export default {
       (v) => !!v || '密码不能为空'
     ],
     remPwd: false,
-    autoLogin: true
+    autoLogin: true,
+    getall: false
   }),
   methods: {
     getConf () {
@@ -197,14 +198,14 @@ export default {
           username: this.username,
           password: this.password
         }).then(function (res) {
+          let that = this
           if (res.data.errors === undefined || res.data.errors.length === 0) {
             this.$store.commit('getUser', this.username)
             axios.all([this.getConf(), this.getDateCycle(), this.getWarehouse()])
               .then(axios.spread(function (acct, perms) {
                 // Both requests are now complete
+                that.$router.push({ name: 'homepage' })
               }))
-            console.log(this.$store.state.boxList)
-            this.$router.push({ name: 'homepage' })
           } else {
             this.verified = false
             this.errorMsg = res.data.errors[0].msg

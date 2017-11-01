@@ -285,7 +285,7 @@ var line = {
     data: []
   }]
 }
-let serverUrl = 'http://localhost:8080/dashboard-web/api'
+let serverUrl = 'http://10.8.42.143:8080/dashboard-web/api'
 export default {
   data: () => ({
     index: [],

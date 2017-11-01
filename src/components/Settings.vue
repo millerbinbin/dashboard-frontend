@@ -158,7 +158,7 @@ export default {
       this.boxList.push(v)
     },
     goLogin: function () {
-      let serverUrl = 'http://localhost:8080/dashboard-web/api'
+      let serverUrl = 'http://10.8.42.143:8080/dashboard-web/api'
       let funcUrl = serverUrl + '/func'
       let funcList = []
       for (var i = this.boxList.length - 1; i >= 0; i--) {

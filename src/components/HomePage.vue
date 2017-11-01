@@ -25,9 +25,6 @@ body
   height: 10px
   width: 80%
 
-.el-card__body
-  padding: 5px
-
 .material-icons.grey100 {
   color: #6E88AC;
 }
@@ -74,10 +71,10 @@ body
   color: #fbfdff
   background-color: #2E3C51
 
-@media (min-width 320px)
+@media (min-width 360px)
   .card
     .echarts
-      width: 320px
+      width: 360px
       height: 240px
 
 @media (min-width 480px)
@@ -91,7 +88,6 @@ body
     .echarts
       width: 900px
       height: 240px
-
 
 </style>
 
@@ -159,7 +155,7 @@ body
               <i v-else-if="item.idxValue1 < 0" class="material-icons md-16 red100">trending_down</i>
             </v-flex>
             <v-flex xs1 style="padding-top: 8px"><div class="grey-bar"/></v-flex>
-            <v-flex xs3 style="font-size: .5em; padding-top: 5px">{{ startDate }}</v-flex>
+            <v-flex xs3 style="font-size: .5em; padding-top: 5px">{{ midDate }}</v-flex>
             <v-flex xs1><i class="material-icons md-24 grey100" @click="goDetails(item.funcName)">more_horiz</i></v-flex>
             <v-flex xs4 style="font-size: 1.25em" @click="goDetails(item.funcName)"><b>{{ item.funcFormatValue }}</b></v-flex>
             <v-flex xs3 style="font-size: .5em">
@@ -273,7 +269,7 @@ var line = {
     data: []
   }]
 }
-let serverUrl = 'http://localhost:8080/dashboard-web/api'
+let serverUrl = 'http://10.8.42.143:8080/dashboard-web/api'
 export default {
   data: () => ({
     e1: null,
@@ -333,6 +329,7 @@ export default {
   mounted: function () {
     this.statDate = this.$store.state.sysDate
     this.startDate = addDate(this.statDate, -14)
+    this.midDate = addDate(this.statDate, -7)
     this.warehouse = this.e1.name
     this.loadInfo(serverUrl + '/stat/res/box', this.$store.state.boxList, 'box')
     this.loadInfo(serverUrl + '/stat/res/chart', this.$store.state.chartList, 'chart')
