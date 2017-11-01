@@ -158,9 +158,9 @@ export default {
           let freeList = []
           for (var i = 0; i <= res.data.length - 1; i++) {
             let tmpData = res.data[i]
-            if (tmpData.funcType === 0) boxList.push({text: tmpData.funcName})
-            else if (tmpData.funcType === 1) chartList.push({text: tmpData.funcName})
-            else if (tmpData.funcType === 2) freeList.push({text: tmpData.funcName})
+            if (tmpData.funcType === 0) boxList.push(tmpData.funcName)
+            else if (tmpData.funcType === 1) chartList.push(tmpData.funcName)
+            else if (tmpData.funcType === 2) freeList.push(tmpData.funcName)
           }
           this.$store.commit('updateList', {type: 0, list: boxList})
           this.$store.commit('updateList', {type: 1, list: chartList})
@@ -199,9 +199,11 @@ export default {
         }).then(function (res) {
           if (res.data.errors === undefined || res.data.errors.length === 0) {
             this.$store.commit('getUser', this.username)
-            this.getConf()
-            this.getWarehouse()
-            this.getDateCycle()
+            axios.all([this.getConf(), this.getDateCycle(), this.getWarehouse()])
+              .then(axios.spread(function (acct, perms) {
+                // Both requests are now complete
+              }))
+            console.log(this.$store.state.boxList)
             this.$router.push({ name: 'homepage' })
           } else {
             this.verified = false
@@ -218,7 +220,8 @@ export default {
   mounted: function () {
     let a = new Date()
     let b = a.getFullYear() + '/' + (a.getMonth() + 1) + '/' + a.getDate()
-    this.$store.commit('getDate', b)
+    console.log(b)
+    this.$store.commit('getDate', '2017/10/31')
   }
 }
 </script>

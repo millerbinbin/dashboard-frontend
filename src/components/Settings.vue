@@ -95,24 +95,24 @@ body
     <v-layout row wrap>
       <v-flex xs12 style="text-align: left">数据框</v-flex>
       <v-flex xs12>
-        <v-card draggable="true" style="margin-top: 2px" v-model="e1" v-for="(item, index) in boxList" v-dragging="{ item: item, list: boxList, group: 'box' }" :key="item.text">
-          <i class="material-icons md-16 red100" @click="removeBoxItem(index)">remove_circle</i>{{item.text}}
+        <v-card draggable="true" style="margin-top: 2px" v-model="e1" v-for="(item, index) in boxList" v-dragging="{ item: item, list: boxList, group: 'box' }" :key="item">
+          <i class="material-icons md-16 red100" @click="removeBoxItem(index)">remove_circle</i>{{item}}
       	</v-card>
       </v-flex>
     </v-layout>
     <v-layout row wrap>
       <v-flex xs12 style="text-align: left">数据趋势图</v-flex>
       <v-flex xs12>
-        <v-card draggable="true" style="margin-top: 2px" v-for="(item, index) in chartList" v-dragging="{ item: item, list: chartList, group: 'chart' }" :key="item.text">
-          <i class="material-icons md-16 red100" @click="removeChartItem(index)">remove_circle</i>{{item.text}}
+        <v-card draggable="true" style="margin-top: 2px" v-for="(item, index) in chartList" v-dragging="{ item: item, list: chartList, group: 'chart' }" :key="item">
+          <i class="material-icons md-16 red100" @click="removeChartItem(index)">remove_circle</i>{{item}}
         </v-card>
       </v-flex>
     </v-layout>
     <v-layout row wrap>
       <v-flex xs12 style="text-align: left"></v-flex>
       <v-flex xs12>
-        <v-card style="margin-top: 2px" v-for="(item, index) in freeList" :key="item.text">
-          <i class="material-icons md-16 green100" @click="addItem(index)">add_circle</i>{{item.text}}
+        <v-card style="margin-top: 2px" v-for="(item, index) in freeList" :key="item">
+          <i class="material-icons md-16 green100" @click="addItem(index)">add_circle</i>{{item}}
         </v-card>
       </v-flex>
     </v-layout>
@@ -143,32 +143,32 @@ export default {
       this.$router.go(-1)
     },
     removeBoxItem: function (index) {
-      let v = this.boxList[index].text
+      let v = this.boxList[index]
       this.boxList.splice(index, 1)
-      this.freeList.push({text: v})
+      this.freeList.push(v)
     },
     removeChartItem: function (index) {
-      let v = this.chartList[index].text
+      let v = this.chartList[index]
       this.chartList.splice(index, 1)
-      this.freeList.push({text: v})
+      this.freeList.push(v)
     },
     addItem: function (index) {
-      let v = this.freeList[index].text
+      let v = this.freeList[index]
       this.freeList.splice(index, 1)
-      this.boxList.push({text: v})
+      this.boxList.push(v)
     },
     goLogin: function () {
       let serverUrl = 'http://localhost:8080/dashboard-web/api'
       let funcUrl = serverUrl + '/func'
       let funcList = []
       for (var i = this.boxList.length - 1; i >= 0; i--) {
-        funcList.push({funcName: this.boxList[i].text, funcType: 0, seq: i})
+        funcList.push({funcName: this.boxList[i], funcType: 0, seq: i})
       }
       for (i = this.chartList.length - 1; i >= 0; i--) {
-        funcList.push({funcName: this.chartList[i].text, funcType: 1, seq: i})
+        funcList.push({funcName: this.chartList[i], funcType: 1, seq: i})
       }
       for (i = this.freeList.length - 1; i >= 0; i--) {
-        funcList.push({funcName: this.freeList[i].text, funcType: 2, seq: i})
+        funcList.push({funcName: this.freeList[i], funcType: 2, seq: i})
       }
       axios.put(funcUrl, funcList)
         .then(function (res) {

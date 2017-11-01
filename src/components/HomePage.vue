@@ -107,6 +107,7 @@ body
           single-line
           bottom
           style="width: 50%"
+          @input="redraw"
         ></v-select>
       </v-flex>
       <v-flex xs2 offset-xs2 style="padding-top: 21px">
@@ -118,22 +119,22 @@ body
       <v-flex xs6 text-xs-right style="font-size: .625em; padding-right: 5px; padding-top: 2px">数据日期：{{ $store.state.sysDate }}</v-flex>
       <v-flex xs6 v-for="item in boxInfo">
         <v-card style="padding: 5px; background-color: #2E3C51; height: 88px">
-          <v-layout row wrap text-xs-left>
+          <v-layout row wrap text-xs-left @click="goDetails(item.funcName)">
             <v-flex xs8 style="font-size: .75em; padding-top: 10px; padding-bottom: 0px">{{ item.funcName }}</v-flex>
             <v-flex xs4 style="font-size: .5em">
-              {{ item.f1Name }}<br>
-              <b style="font-size: 1.25em">{{ item.f1Value }}%</b>
-              <i v-if="item.f1Value > 0" class="material-icons md-16 green100">trending_up</i>
-              <i v-else-if="item.f1Value == 0" class="material-icons md-16 yellow100">trending_flat</i>
-              <i v-else-if="item.f1Value < 0" class="material-icons md-16 red100">trending_down</i>
+              {{ item.idxName1 }}<br>
+              <b style="font-size: 1.25em">{{ item.idxValue1 }}%</b>
+              <i v-if="item.idxValue1 > 0" class="material-icons md-16 green100">trending_up</i>
+              <i v-else-if="item.idxValue1 == 0" class="material-icons md-16 yellow100">trending_flat</i>
+              <i v-else-if="item.idxValue1 < 0" class="material-icons md-16 red100">trending_down</i>
             </v-flex>
-            <v-flex xs8 style="font-size: 1.25em; padding-top: 5px; padding-bottom: 0px"><b>{{ item.funcValue }}</b></v-flex>
+            <v-flex xs8 style="font-size: 1.25em; padding-top: 5px; padding-bottom: 0px"><b>{{ item.funcFormatValue }}</b></v-flex>
             <v-flex xs4 style="font-size: .5em">
-              {{ item.f2Name }}<br>
-              <b style="font-size: 1.25em">{{ item.f2Value }}%</b>
-              <i v-if="item.f2Value > 0" class="material-icons md-16 green100">trending_up</i>
-              <i v-else-if="item.f2Value == 0" class="material-icons md-16 yellow100">trending_flat</i>
-              <i v-else-if="item.f2Value < 0" class="material-icons md-16 red100">trending_down</i>
+              {{ item.idxName2 }}<br>
+              <b style="font-size: 1.25em">{{ item.idxValue2 }}%</b>
+              <i v-if="item.idxValue2 > 0" class="material-icons md-16 green100">trending_up</i>
+              <i v-else-if="item.idxValue2 == 0" class="material-icons md-16 yellow100">trending_flat</i>
+              <i v-else-if="item.idxValue2 < 0" class="material-icons md-16 red100">trending_down</i>
             </v-flex>
             <v-flex xs8 style="padding: 0px"><div class="under-bar"></div></v-flex>
           </v-layout>
@@ -141,7 +142,7 @@ body
       </v-flex>
       <v-flex v-if="boxInfo.length % 2" xs6>
         <v-card style="padding: 5px; background-color: #2E3C51; height: 88px; text-align: center">
-          <i class="material-icons md-48 grey100" @click=goSettings style="margin-top: 20px;">add_circle</i>
+          <i class="material-icons md-48 grey100" @click="goSettings" style="margin-top: 20px;">add_circle</i>
         </v-card>
       </v-flex>
     </v-layout>
@@ -149,27 +150,27 @@ body
       <v-flex xs12 style="padding:2px 2px 0 2px">
         <v-card style="background-color: #364962; height: 88px; padding: 5px; box-shadow: none">
           <v-layout row wrap>
-            <v-flex xs4 style="font-size: .75em" @click="goDetails">{{ item.funcName }}</v-flex>
+            <v-flex xs4 style="font-size: .75em" @click="goDetails(item.funcName)">{{ item.funcName }}</v-flex>
             <v-flex xs3 style="font-size: .5em">
-              {{ item.f1Name }}<br>
-              <b style="font-size: 1.25em">{{ item.f1Value }}%</b>
-              <i v-if="item.f1Value > 0" class="material-icons md-16 green100">trending_up</i>
-              <i v-else-if="item.f1Value == 0" class="material-icons md-16 yellow100">trending_flat</i>
-              <i v-else-if="item.f1Value < 0" class="material-icons md-16 red100">trending_down</i>
+              {{ item.idxName1 }}<br>
+              <b style="font-size: 1.25em">{{ item.idxValue1 }}%</b>
+              <i v-if="item.idxValue1 > 0" class="material-icons md-16 green100">trending_up</i>
+              <i v-else-if="item.idxValue1 == 0" class="material-icons md-16 yellow100">trending_flat</i>
+              <i v-else-if="item.idxValue1 < 0" class="material-icons md-16 red100">trending_down</i>
             </v-flex>
             <v-flex xs1 style="padding-top: 8px"><div class="grey-bar"/></v-flex>
-            <v-flex xs3 style="font-size: .5em; padding-top: 5px">{{ item.c1Name }}</v-flex>
-            <v-flex xs1><i class="material-icons md-24 grey100" @click="goDetails(i)">more_horiz</i></v-flex>
-            <v-flex xs4 style="font-size: 1.25em" @click="goDetails"><b>{{ item.funcValue }}</b></v-flex>
+            <v-flex xs3 style="font-size: .5em; padding-top: 5px">{{ startDate }}</v-flex>
+            <v-flex xs1><i class="material-icons md-24 grey100" @click="goDetails(item.funcName)">more_horiz</i></v-flex>
+            <v-flex xs4 style="font-size: 1.25em" @click="goDetails(item.funcName)"><b>{{ item.funcFormatValue }}</b></v-flex>
             <v-flex xs3 style="font-size: .5em">
-              {{ item.f2Name }}<br>
-              <b style="font-size: 1.25em">{{ item.f2Value }}%</b>
-              <i v-if="item.f2Value > 0" class="material-icons md-16 green100">trending_up</i>
-              <i v-else-if="item.f2Value == 0" class="material-icons md-16 yellow100">trending_flat</i>
-              <i v-else-if="item.f2Value < 0" class="material-icons md-16 red100">trending_down</i>
+              {{ item.idxName2 }}<br>
+              <b style="font-size: 1.25em">{{ item.idxValue2 }}%</b>
+              <i v-if="item.idxValue2 > 0" class="material-icons md-16 green100">trending_up</i>
+              <i v-else-if="item.idxValue2 == 0" class="material-icons md-16 yellow100">trending_flat</i>
+              <i v-else-if="item.idxValue2 < 0" class="material-icons md-16 red100">trending_down</i>
             </v-flex>
             <v-flex xs1 style="padding-top: 8px"><div class="cyan-bar"/></v-flex>
-            <v-flex xs4 style="font-size: .5em; padding-top: 5px">{{ item.c2Name }}</v-flex>
+            <v-flex xs4 style="font-size: .5em; padding-top: 5px">{{ statDate }}</v-flex>
             <v-flex xs4 style="padding: 0 0"><div class="under-bar"></div></v-flex>
           </v-layout>
         </v-card>
@@ -183,11 +184,11 @@ body
     <v-layout row wrap>
       <v-flex xs12 style="padding-top: 4px">
         <v-card style="height: 40px; background-color: #2E3C51">
-          <i class="material-icons md-32 grey100" @click=goSettings style="margin-top: 4px;">add_circle</i>
+          <i class="material-icons md-32 grey100" @click="goSettings" style="margin-top: 4px;">add_circle</i>
         </v-card>
       </v-flex>
-      <v-flex xs3 v-for="i in 8" :key="i">
-        <v-card style="padding: 3px; background-color: #2E3C51; font-size: .7em">客户调研活动</v-card>
+      <v-flex xs3 v-for="(item, i) in $store.state.freeList" :key="i">
+        <v-card style="padding: 3px; background-color: #2E3C51; font-size: .7em"> {{ item }}</v-card>
       </v-flex>
     </v-layout>
   </v-container>
@@ -272,10 +273,13 @@ var line = {
     data: []
   }]
 }
-
+let serverUrl = 'http://localhost:8080/dashboard-web/api'
 export default {
   data: () => ({
     e1: null,
+    statDate: null,
+    startDate: null,
+    warehouse: null,
     boxInfo: [],
     chartInfo: []
   }),
@@ -283,58 +287,55 @@ export default {
     goSettings: function () {
       this.$router.push({ name: 'settings' })
     },
-    goDetails: function (i) {
-      this.$router.push({ name: 'detail', params: {chartInfo: this.chartInfo[i]} })
-    }
-  },
-  created: function () {
-    this.e1 = this.$store.state.warehouseList[0]
-  },
-  mounted: function () {
-    let serverUrl = 'http://localhost:8080/dashboard-web/api'
-    let boxesUrl = serverUrl + '/stat/boxinfo'
-    let chartsUrl = serverUrl + '/stat/chartinfo'
-    let resUrl = serverUrl + '/stat/res'
-    axios.post(resUrl, {funcName: '接收订单量', warehouse: '上海1仓'})
+    goDetails: function (funcName) {
+      this.$router.push({ name: 'detail', params: {warehouse: this.warehouse, funcName: funcName} })
+    },
+    redraw: function () {
+      this.warehouse = this.$store.state.warehouseList[this.e1 - 1].name
+      this.loadInfo(serverUrl + '/stat/res/box', this.$store.state.boxList, 'box')
+      this.loadInfo(serverUrl + '/stat/res/chart', this.$store.state.chartList, 'chart')
+    },
+    loadInfo: function (requestUrl, infoList, type) {
+      axios.post(requestUrl,
+        {
+          funcNameList: infoList,
+          warehouse: this.warehouse,
+          dateCycle: this.dateCycle,
+          statDate: this.statDate,
+          dateStart: this.startDate,
+          dateEnd: this.statDate}
+        )
       .then(function (res) {
-        console.log(res.data)
-      })
-      .catch(function (err) {
-        console.log(err)
-      })
-    axios.get(boxesUrl)
-      .then(function (res) {
-        this.boxInfo = res.data
-      }.bind(this))
-      .catch(function (err) {
-        console.log(err)
-      })
-    axios.get(chartsUrl)
-      .then(function (res) {
-        for (var i = 0; i <= res.data.length - 1; i++) {
-          let tmpData = res.data[i]
-          let pline = JSON.parse(JSON.stringify(line))
-          pline.xAxis.data = tmpData.periods
-          pline.series[0].data = tmpData.c1Value
-          pline.series[1].data = tmpData.c2Value
-          pline.tooltip.formatter = dateFormatted
-          let option = {
-            funcName: tmpData.funcName,
-            funcValue: tmpData.funcValue,
-            f1Name: tmpData.f1Name,
-            f1Value: tmpData.f1Value,
-            f2Name: tmpData.f2Name,
-            f2Value: tmpData.f2Value,
-            c1Name: tmpData.c1Name,
-            c2Name: tmpData.c2Name,
-            line: pline
+        if (type === 'box') {
+          this.boxInfo = []
+          this.boxInfo = res.data
+        } else if (type === 'chart') {
+          this.chartInfo = []
+          for (var i = 0; i <= res.data.length - 1; i++) {
+            let pline = JSON.parse(JSON.stringify(line))
+            pline.xAxis.data = res.data[i].p.slice(-7)
+            pline.series[0].data = res.data[i].v1.slice(-7)
+            pline.series[1].data = res.data[i].v1.slice(0, 7)
+            pline.tooltip.formatter = dateFormatted
+            res.data[i].line = pline
+            this.chartInfo.push(res.data[i])
           }
-          this.chartInfo.push(option)
         }
       }.bind(this))
       .catch(function (err) {
         console.log(err)
       })
+    }
+  },
+  created: function () {
+    this.e1 = this.$store.state.warehouseList[1]
+  },
+  mounted: function () {
+    this.statDate = this.$store.state.sysDate
+    this.startDate = addDate(this.statDate, -14)
+    this.warehouse = this.e1.name
+    this.loadInfo(serverUrl + '/stat/res/box', this.$store.state.boxList, 'box')
+    this.loadInfo(serverUrl + '/stat/res/chart', this.$store.state.chartList, 'chart')
   }
 }
 </script>
