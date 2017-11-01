@@ -130,14 +130,14 @@ body
         <v-layout row wrap>
           <v-flex xs12 style="padding:2px 2px 0 2px; width: 100%; height: 88px">
             <v-card style="background-color: #364962; height: 88px; padding: 5px; box-shadow: none">
-              <v-layout row wrap>
+              <v-layout row wrap v-if="dateCycle==='日维度'">
                 <v-flex xs4 style="font-size: .75em; text-align: left">{{ item.funcName }}</v-flex>
                 <v-flex xs3 style="font-size: .5em; text-align: left;">
-                  {{ item.idxName3 }}<br>
-                  <b style="font-size: 1.25em">{{ item.idxValue3 }}%</b>
-                  <i v-if="item.idxValue3 > 0" class="material-icons md-16 green100">trending_up</i>
-                  <i v-else-if="item.idxValue3 == 0" class="material-icons md-16 yellow100">trending_flat</i>
-                  <i v-else-if="item.idxValue3 < 0" class="material-icons md-16 red100">trending_down</i>
+                  {{ item.idxName4 }}<br>
+                  <b style="font-size: 1.25em">{{ item.idxValue4 }}</b>
+                  <i v-if="item.idxValue1 > 0" class="material-icons md-16 green100">trending_up</i>
+                  <i v-else-if="item.idxValue1 == 0" class="material-icons md-16 yellow100">trending_flat</i>
+                  <i v-else-if="item.idxValue1 < 0" class="material-icons md-16 red100">trending_down</i>
                 </v-flex>
                 <!-- <v-flex xs1 style="padding-top: 8px"><div class="grey-bar"/></v-flex>
                 <v-flex xs3 style="font-size: .5em; text-align: left; padding-top: 5px">{{ startDate }}</v-flex> -->
@@ -150,11 +150,11 @@ body
                 </v-flex>
                 <v-flex xs4 style="font-size: 1.25em; text-align: left"><b>{{ item.funcFormatValue }}</b></v-flex>
                 <v-flex xs3 style="font-size: .5em; text-align: left;">
-                  {{ item.idxName4 }}<br>
-                  <b style="font-size: 1.25em">{{ item.idxValue4 }}%</b>
-                  <i v-if="item.idxValue4 > 0" class="material-icons md-16 green100">trending_up</i>
-                  <i v-else-if="item.idxValue4 == 0" class="material-icons md-16 yellow100">trending_flat</i>
-                  <i v-else-if="item.idxValue4 < 0" class="material-icons md-16 red100">trending_down</i>
+                  {{ item.idxName3 }}<br>
+                  <b style="font-size: 1.25em">{{ item.idxValue3 }}</b>
+                  <i v-if="item.idxValue2 > 0" class="material-icons md-16 green100">trending_up</i>
+                  <i v-else-if="item.idxValue2 == 0" class="material-icons md-16 yellow100">trending_flat</i>
+                  <i v-else-if="item.idxValue2 < 0" class="material-icons md-16 red100">trending_down</i>
                 </v-flex>
                 <v-flex xs3 style="font-size: .5em; text-align: left;">
                   {{ item.idxName2 }}<br>
@@ -162,6 +162,80 @@ body
                   <i v-if="item.idxValue2 > 0" class="material-icons md-16 green100">trending_up</i>
                   <i v-else-if="item.idxValue2 == 0" class="material-icons md-16 yellow100">trending_flat</i>
                   <i v-else-if="item.idxValue2 < 0" class="material-icons md-16 red100">trending_down</i>
+                </v-flex>
+                <!-- <v-flex xs1 style="padding-top: 8px"><div class="cyan-bar"/></v-flex>
+                <v-flex xs4 style="font-size: .5em; text-align: left; padding-top: 5px">{{ statDate }}</v-flex> -->
+                <v-flex xs4 style="padding: 0 0"><div class="under-bar"></div></v-flex>
+              </v-layout>
+              <v-layout row wrap v-else-if="dateCycle==='周维度'">
+                <v-flex xs4 style="font-size: .75em; text-align: left">{{ item.funcName }}</v-flex>
+                <v-flex xs3 style="font-size: .5em; text-align: left;">
+                  {{ item.idxName5 }}<br>
+                  <b style="font-size: 1.25em">{{ item.idxValue5 }}</b>
+                  <i v-if="item.idxValue7 > 0" class="material-icons md-16 green100">trending_up</i>
+                  <i v-else-if="item.idxValue7 == 0" class="material-icons md-16 yellow100">trending_flat</i>
+                  <i v-else-if="item.idxValue7 < 0" class="material-icons md-16 red100">trending_down</i>
+                </v-flex>
+                <!-- <v-flex xs1 style="padding-top: 8px"><div class="grey-bar"/></v-flex>
+                <v-flex xs3 style="font-size: .5em; text-align: left; padding-top: 5px">{{ startDate }}</v-flex> -->
+                <v-flex xs3 style="font-size: .5em; text-align: left;">
+                  {{ item.idxName7 }}<br>
+                  <b style="font-size: 1.25em">{{ item.idxValue7 }}%</b>
+                  <i v-if="item.idxValue7 > 0" class="material-icons md-16 green100">trending_up</i>
+                  <i v-else-if="item.idxValue7 == 0" class="material-icons md-16 yellow100">trending_flat</i>
+                  <i v-else-if="item.idxValue7 < 0" class="material-icons md-16 red100">trending_down</i>
+                </v-flex>
+                <v-flex xs4 style="font-size: 1.25em; text-align: left"><b>{{ item.funcFormatValue }}</b></v-flex>
+                <v-flex xs3 style="font-size: .5em; text-align: left;">
+                  {{ item.idxName6 }}<br>
+                  <b style="font-size: 1.25em">{{ item.idxValue6 }}</b>
+                  <i v-if="item.idxValue8 > 0" class="material-icons md-16 green100">trending_up</i>
+                  <i v-else-if="item.idxValue8 == 0" class="material-icons md-16 yellow100">trending_flat</i>
+                  <i v-else-if="item.idxValue8 < 0" class="material-icons md-16 red100">trending_down</i>
+                </v-flex>
+                <v-flex xs3 style="font-size: .5em; text-align: left;">
+                  {{ item.idxName8 }}<br>
+                  <b style="font-size: 1.25em">{{ item.idxValue8 }}%</b>
+                  <i v-if="item.idxValue8 > 0" class="material-icons md-16 green100">trending_up</i>
+                  <i v-else-if="item.idxValue8 == 0" class="material-icons md-16 yellow100">trending_flat</i>
+                  <i v-else-if="item.idxValue8 < 0" class="material-icons md-16 red100">trending_down</i>
+                </v-flex>
+                <!-- <v-flex xs1 style="padding-top: 8px"><div class="cyan-bar"/></v-flex>
+                <v-flex xs4 style="font-size: .5em; text-align: left; padding-top: 5px">{{ statDate }}</v-flex> -->
+                <v-flex xs4 style="padding: 0 0"><div class="under-bar"></div></v-flex>
+              </v-layout>
+              <v-layout row wrap v-else-if="dateCycle==='月维度'">
+                <v-flex xs4 style="font-size: .75em; text-align: left">{{ item.funcName }}</v-flex>
+                <v-flex xs3 style="font-size: .5em; text-align: left;">
+                  {{ item.idxName10 }}<br>
+                  <b style="font-size: 1.25em">{{ item.idxValue10 }}</b>
+                  <i v-if="item.idxValue11 > 0" class="material-icons md-16 green100">trending_up</i>
+                  <i v-else-if="item.idxValue11 == 0" class="material-icons md-16 yellow100">trending_flat</i>
+                  <i v-else-if="item.idxValue11 < 0" class="material-icons md-16 red100">trending_down</i>
+                </v-flex>
+                <!-- <v-flex xs1 style="padding-top: 8px"><div class="grey-bar"/></v-flex>
+                <v-flex xs3 style="font-size: .5em; text-align: left; padding-top: 5px">{{ startDate }}</v-flex> -->
+                <v-flex xs3 style="font-size: .5em; text-align: left;">
+                  {{ item.idxName11 }}<br>
+                  <b style="font-size: 1.25em">{{ item.idxValue11 }}%</b>
+                  <i v-if="item.idxValue11 > 0" class="material-icons md-16 green100">trending_up</i>
+                  <i v-else-if="item.idxValue11 == 0" class="material-icons md-16 yellow100">trending_flat</i>
+                  <i v-else-if="item.idxValue11 < 0" class="material-icons md-16 red100">trending_down</i>
+                </v-flex>
+                <v-flex xs4 style="font-size: 1.25em; text-align: left"><b>{{ item.funcFormatValue }}</b></v-flex>
+                <v-flex xs3 style="font-size: .5em; text-align: left;">
+                  {{ item.idxName9 }}<br>
+                  <b style="font-size: 1.25em">{{ item.idxValue9 }}</b>
+                  <i v-if="item.idxValue8 > 0" class="material-icons md-16 green100">trending_up</i>
+                  <i v-else-if="item.idxValue8 == 0" class="material-icons md-16 yellow100">trending_flat</i>
+                  <i v-else-if="item.idxValue8 < 0" class="material-icons md-16 red100">trending_down</i>
+                </v-flex>
+                <v-flex xs3 style="font-size: .5em; text-align: left;">
+                  {{ item.idxName8 }}<br>
+                  <b style="font-size: 1.25em">{{ item.idxValue8 }}%</b>
+                  <i v-if="item.idxValue8 > 0" class="material-icons md-16 green100">trending_up</i>
+                  <i v-else-if="item.idxValue8 == 0" class="material-icons md-16 yellow100">trending_flat</i>
+                  <i v-else-if="item.idxValue8 < 0" class="material-icons md-16 red100">trending_down</i>
                 </v-flex>
                 <!-- <v-flex xs1 style="padding-top: 8px"><div class="cyan-bar"/></v-flex>
                 <v-flex xs4 style="font-size: .5em; text-align: left; padding-top: 5px">{{ statDate }}</v-flex> -->
@@ -331,7 +405,6 @@ export default {
           this.chartInfo = [{}, {}]
           this.index = []
         }
-        console.log(this.chartInfo)
       }.bind(this))
       .catch(function (err) {
         console.log(err)

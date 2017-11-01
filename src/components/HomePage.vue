@@ -331,6 +331,7 @@ export default {
     this.startDate = addDate(this.statDate, -14)
     this.midDate = addDate(this.statDate, -7)
     this.warehouse = this.e1.name
+    this.dateCycle = '日维度'
     this.loadInfo(serverUrl + '/stat/res/box', this.$store.state.boxList, 'box')
     this.loadInfo(serverUrl + '/stat/res/chart', this.$store.state.chartList, 'chart')
   }
