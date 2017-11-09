@@ -1,17 +1,3 @@
-<template>
-  <div id='app'>
-  	<v-app>
-  		<router-view></router-view>
-	</v-app>
-  </div>
-</template>
-
-<script>
-export default {
-  name: 'app'
-}
-</script>
-
 <style>
   .application {
     padding-top: 8px;
@@ -279,7 +265,27 @@ export default {
     background-color: #2E3C51!important;
     color: #FFF!important;
   }
-
+  .trending-down {
+    background: url(down.png) no-repeat;
+    width: 16px;    
+    height: 16px;
+    display: inline-block;
+    margin-top: 2px;
+  }
+  .trending-up {
+    background: url(up.png) no-repeat;
+    width: 16px;    
+    height: 16px;
+    display: inline-block;
+    margin-top: 2px;
+  }
+  .trending-flat {
+    background: url(flat.png) no-repeat;
+    width: 16px;    
+    height: 16px;
+    display: inline-block;
+    margin-top: 2px;
+  }
   .flex.xs12.circle-bar .card {
     height: 40px!important;
   }
@@ -292,25 +298,4 @@ export default {
     margin-top: 20px!important;
   }
 
-  .trending-down {
-    background: url(assets/down.png) no-repeat;
-    width: 16px;    
-    height: 16px;
-    display: inline-block;
-    margin-top: 2px;
-  }
-  .trending-up {
-    background: url(assets/up.png) no-repeat;
-    width: 16px;    
-    height: 16px;
-    display: inline-block;
-    margin-top: 2px;
-  }
-  .trending-flat {
-    background: url(assets/flat.png) no-repeat;
-    width: 16px;    
-    height: 16px;
-    display: inline-block;
-    margin-top: 2px;
-  }
-</style>
+  </style>

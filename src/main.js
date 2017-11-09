@@ -4,18 +4,31 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import App from './App'
 import router from './router'
+import Vuetify from 'vuetify'
+
+import 'vuetify/dist/vuetify.min.css'
+
+Vue.use(Vuetify)
 Vue.use(Vuex)
 Vue.config.productionTip = false
+
 /* eslint-disable no-new */
 const store = new Vuex.Store({
   state: {
     sysUser: 'aa',
-    sysDate: 'date',
-    boxList: [],
-    chartList: [],
-    freeList: [],
+    sysDate: '2011/11/11',
+    sysWeek: '2011 W33',
+    sysMonth: '2011 M10',
     warehouseList: [],
-    dateCycleList: []
+    dateCycleList: [],
+    allMetrics: {
+      'sample1': {'name': 'sample1'},
+      'sample2': {'name': 'sample2'},
+      'sample3': {'name': 'sample3'},
+      'sample4': {'name': 'sample4'}
+    },
+    homepageValues: [],
+    homepageCharts: []
   },
   mutations: {
     getUser (state, username) {
@@ -25,15 +38,24 @@ const store = new Vuex.Store({
       state.sysDate = currentDate
     },
     updateList (state, item) {
-      if (item.type === 0) state.boxList = item.list
-      else if (item.type === 1) state.chartList = item.list
-      else if (item.type === 2) state.freeList = item.list
+      if (item.type === 1) state.boxList = item.list
+      else if (item.type === 2) state.chartList = item.list
+      else if (item.type === 3) state.freeList = item.list
     },
     getWarehouse (state, list) {
       state.warehouseList = list
     },
     getDateCycle (state, list) {
       state.dateCycleList = list
+    },
+    addMetrics (state, p) {
+      state.allMetrics[p.name] = p
+    },
+    setHomepageValue (state, p) {
+      state.homepageValues = p
+    },
+    setHomepageChart (state, p) {
+      state.homepageCharts = p
     }
   },
   getters: {
@@ -47,5 +69,8 @@ new Vue({
   router,
   template: '<App/>',
   components: { App },
-  store
+  store,
+  mounted: function () {
+    this.$router.push({ name: 'settings' })
+  }
 })
