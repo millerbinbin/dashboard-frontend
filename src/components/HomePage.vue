@@ -8,7 +8,7 @@
               <v-select v-bind:items="warehouseList" v-model="a1" item-text="warehouseName" item-value="id" single-line bottom></v-select>
             </v-flex>
             <v-flex xs2 offset-xs2>
-              <v-btn icon v-on:click="router.push({ path: 'settings' })">
+              <v-btn icon v-on:click="goSettings">
                 <i class="material-icons md-24 grey100">settings</i>
               </v-btn>
             </v-flex>
@@ -17,8 +17,8 @@
       </v-flex>
     </v-layout>
     <v-layout row wrap>
-      <v-flex xs6 user-tag>admin</v-flex>
-      <v-flex xs6 date-tag>数据日期：2017/07/14</v-flex>
+      <v-flex xs6 user-tag>{{ this.sysUser }}</v-flex>
+      <v-flex xs6 date-tag>数据日期：{{ this.sysDate }}</v-flex>
     </v-layout>
     <v-container grid-list-sm text-xs-left pt-0>
       <number-view></number-view>
@@ -27,11 +27,11 @@
     <v-layout row wrap text-xs-center>
       <v-flex xs12 circle-bar>
         <v-card>
-          <i class="material-icons md-32 grey100">add_circle</i>
+          <i class="material-icons md-32 grey100" v-on:click="goSettings">add_circle</i>
         </v-card>
       </v-flex>
-      <v-flex xs3 v-for="i in 3" :key="i">
-        <v-card> ddd </v-card>
+      <v-flex xs3 v-for="(item, idx) in this.$store.state.freeList" :key="idx">
+        <v-card> {{ item.funcName }} </v-card>
       </v-flex>
     </v-layout>
   </v-container>
@@ -49,6 +49,7 @@ export default {
       render: function (c) {
         let list = []
         this.numberComps.map(function (item) {
+          console.log(item)
           list.push(c(item, {}))
         })
         if (list.length % 2 === 0) {
@@ -59,7 +60,11 @@ export default {
         }
       },
       mounted: function () {
-        this.numberComps.push('sample1-number')
+        var that = this
+        this.$store.state.homepageValues.forEach(function (item) {
+          that.numberComps.push(item.id + '-number')
+        })
+        console.log(that.numberComps)
       }
     },
     'chart-view': {
@@ -76,14 +81,23 @@ export default {
         return c('div', {'class': {layout: true, row: true, wrap: true}}, list)
       },
       mounted: function () {
-        this.chartComps.push('sample1-chart')
+        var that = this
+        this.$store.state.homepageCharts.forEach(function (item) {
+          that.chartComps.push(item.id + '-chart')
+        })
       }
+    }
+  },
+  methods: {
+    goSettings: function () {
+      this.$router.push({ path: 'settings' })
     }
   },
   data: function () {
     return {
       a1: null,
-      boxsize: [],
+      sysUser: 'jd_user',
+      sysDate: '2017/11/01',
       warehouseList: [
         {warehouseName: '全部仓库', id: 1},
         {warehouseName: '上海1仓', id: 2},
@@ -93,9 +107,9 @@ export default {
     }
   },
   mounted: function () {
+    this.sysDate = this.$store.state.sysDate
     this.a1 = this.warehouseList[0]
     let allnumbercomp = [12, 12, 27]
-    this.boxsize = allnumbercomp.length
   }
 }
 </script>

@@ -34,17 +34,6 @@ import axios from 'axios'
 let serverUrl = 'http://localhost:8080/dashboard-web/api'
 var echarts = require('echarts')
 
-// function getModels () {
-//   let dateCycleUrl = serverUrl + '/models'
-//   axios.get(dateCycleUrl)
-//     .then(function (res) {
-//       initVue(res.data)
-//     })
-//     .catch(function (err) {
-//       console.log(err)
-//     })
-// }
-
 function renderChart (id, option) {
   setTimeout(function () {
     if (document.getElementById(id)) {
@@ -79,7 +68,7 @@ function addDate (dd, dadd) {
 function initVue (components) {
   for (var i = 0; i < components.length; i++) {
     (function (comp) {
-      Vue.component(comp.name + '-number', {
+      Vue.component(comp.id + '-number', {
         template: comp.numberTemplate,
         data: function () {
           return {
@@ -87,7 +76,7 @@ function initVue (components) {
           }
         },
         created: function () {
-          axios.get(serverUrl + '/value/' + comp.name)
+          axios.get(serverUrl + '/value/' + comp.id)
             .then(function (response) {
               this.data = response.data
             }.bind(this))
@@ -98,7 +87,7 @@ function initVue (components) {
       })
       Vue.use(comp.name + '-number')
 
-      Vue.component(comp.name + '-chart', {
+      Vue.component(comp.id + '-chart', {
         template: comp.chartTemplate,
         data: function () {
           return {
@@ -112,7 +101,7 @@ function initVue (components) {
         },
         mounted: function () {
           var that = this
-          axios.get(serverUrl + '/value/' + comp.name)
+          axios.get(serverUrl + '/value/' + comp.id)
             .then(function (response) {
               that.data = (response.data)
             })
@@ -120,16 +109,16 @@ function initVue (components) {
               console.log(error)
             })
 
-          axios.get(serverUrl + '/chart/' + comp.name)
+          axios.get(serverUrl + '/chart/' + comp.id)
             .then(function (response) {
               var data = response.data
               var key = 'day'
-              axios.get(serverUrl + '/chartOption/' + comp.name + '/' + key)
+              axios.get(serverUrl + '/chartOption/' + comp.id + '/' + key)
                 .then(function (reponse2) {
                   var option = (function (res, optionstr) {
                     return eval('(' + optionstr + ')')
                   })(data[key], reponse2.data)
-                  renderChart(comp.name + '-' + key, option)
+                  renderChart(comp.id + '-' + key, option)
                 }).catch(function (error) {
                   console.log(error)
                 })
@@ -139,7 +128,7 @@ function initVue (components) {
             })
         }
       })
-      Vue.use(comp.name + '-chart')
+      Vue.use(comp.id + '-chart')
     })(components[i])
   }
   Vue.component('dummy-bar', {
@@ -154,7 +143,7 @@ function initVue (components) {
     },
     methods: {
       goSettings: function () {
-        alert('go Setting!')
+        this.$router.push({ path: 'settings' })
       }
     }
   })
@@ -182,28 +171,6 @@ export default {
     getall: false
   }),
   methods: {
-    getConf () {
-      let funcUrl = serverUrl + '/func'
-      this.$http.get(funcUrl)
-        .then(function (res) {
-          let boxList = []
-          let chartList = []
-          let freeList = []
-          for (var i = 0; i <= res.data.length - 1; i++) {
-            let tmpData = res.data[i]
-            if (tmpData.funcType === 1) boxList.push(tmpData.funcName)
-            else if (tmpData.funcType === 2) chartList.push(tmpData.funcName)
-            else if (tmpData.funcType === 3) freeList.push(tmpData.funcName)
-          }
-          this.$store.commit('updateList', {type: 1, list: boxList})
-          this.$store.commit('updateList', {type: 2, list: chartList})
-          this.$store.commit('updateList', {type: 3, list: freeList})
-          this.getWarehouse()
-        }.bind(this))
-        .catch(function (err) {
-          console.log(err)
-        })
-    },
     getWarehouse () {
       let warehouseUrl = serverUrl + '/dim/warehouse'
       this.$http.get(warehouseUrl)
@@ -232,13 +199,36 @@ export default {
       let d = Math.round((d1 - d2) / (24 * 60 * 60 * 1000))
       return Math.ceil((d + ((d2.getDay() + 1) - 1)) / 7)
     },
-    getModels () {
-      let dateCycleUrl = serverUrl + '/models'
+    getFuncs () {
+      let funcUrl = serverUrl + '/func'
+      let numberList = []
+      let chartList = []
       var that = this
-      axios.get(dateCycleUrl)
+      axios.get(funcUrl)
+        .then(function (res) {
+          res.data.forEach(function (item) {
+            that.$store.commit('addMetrics', item)
+            if (item.funcType === 0) {
+              numberList.push(item)
+            } else if (item.funcType === 2) {
+              chartList.push(item)
+            }
+          })
+          that.$store.commit('setHomepageValue', numberList)
+          that.$store.commit('setHomepageChart', chartList)
+          that.$router.push({ name: 'homepage' })
+        })
+        .catch(function (err) {
+          console.log(err)
+        })
+    },
+    getModels () {
+      let modelUrl = serverUrl + '/models'
+      var that = this
+      axios.get(modelUrl)
         .then(function (res) {
           initVue(res.data)
-          that.$router.push({ name: 'homepage' })
+          that.getFuncs()
         })
         .catch(function (err) {
           console.log(err)

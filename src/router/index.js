@@ -4,6 +4,7 @@ import Login from '@/components/LoginPage'
 import Home from '@/components/HomePage'
 import Detail from '@/components/DetailPage'
 import Settings from '@/components/SettingPage'
+import Desc from '@/components/DescPage'
 // import Settings from '@/components/SettingPage'
 // import Desc from '@/components/DescPage'
 // import Detail from '@/components/DetailPage'
@@ -32,6 +33,11 @@ export default new Router({
       path: '/settings',
       name: 'settings',
       component: Settings
+    },
+    {
+      path: '/desc',
+      name: 'desc',
+      component: Desc
     }
     // {
     //   path: '/settings',

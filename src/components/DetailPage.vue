@@ -6,7 +6,7 @@
           <v-btn icon v-on:click="goBack">返回</v-btn>
         </v-flex>
         <v-flex xs6 offset-xs1>
-          <span style="font-size: 1.375em;">成本效率AAAA</span>
+          <span style="font-size: 1.375em;">{{data.day.f1}}</span>
         </v-flex>
       </v-layout>
     </v-card>
@@ -67,9 +67,9 @@
         <v-layout row wrap>
           <v-flex xs12 chart-detail>
             <v-card>
-              <div v-show="showingDay" id="sample1-day" style="width:100vw;height:240px"></div>
-              <div v-show="showingWeek" id="sample1-week" style="width:100vw;height:240px"></div>
-              <div v-show="showingMonth" id="sample1-month" style="width:100vw;height:240px"></div>
+              <div v-show="showingDay" :id="dayChartId" style="width:100vw;height:240px"></div>
+              <div v-show="showingWeek" :id="weekChartId" style="width:100vw;height:240px"></div>
+              <div v-show="showingMonth" :id="monthChartId" style="width:100vw;height:240px"></div>
             </v-card>
             <v-card style="height: 30px!important">
               <v-layout row wrap>
@@ -119,6 +119,9 @@ export default {
       showingDay: true,
       showingWeek: false,
       showingMonth: false,
+      dayChartId: null,
+      weekChartId: null,
+      monthChartId: null,
       expand: 'remove',
       dateCycleList: [
         { dateCycle: '日', id: 1, period: '2017/10/31' },
@@ -230,6 +233,9 @@ export default {
   },
   mounted: function () {
     var funcId = this.$route.params.id
+    this.dayChartId = funcId + '-day'
+    this.weekChartId = funcId + '-week'
+    this.monthChartId = funcId + '-month'
     this.renderNumber(this.$route.params.id)
     axios.get(serverUrl + '/chart/' + funcId)
       .then(function (response) {

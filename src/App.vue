@@ -284,7 +284,7 @@ export default {
     height: 40px!important;
   }
   
-  .flex.xs12.circle-bar.card .material-icons{
+  .flex.xs12.circle-bar .material-icons{
     margin-top: 4px!important;
   }
 
@@ -312,5 +312,24 @@ export default {
     height: 16px;
     display: inline-block;
     margin-top: 2px;
+  }
+
+  .list__tile--avatar {
+  	height: 30px;
+  	background-color: #364962;
+  	color: #FFF!important;
+  	font-size: .75em;
+  	border: 1px solid #6E88AC;
+  }
+  .application--light .list {
+  	background-color: #222E3E;
+  }
+
+  .list__tile__content {
+  	color: #FFF;
+  }
+  
+  .application--light .list .list__tile__sub-title, .application--light .list .subheader {
+  	color: #FFF;
   }
 </style>

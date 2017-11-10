@@ -22,10 +22,6 @@ const store = new Vuex.Store({
     warehouseList: [],
     dateCycleList: [],
     allMetrics: {
-      'sample1': {'name': 'sample1'},
-      'sample2': {'name': 'sample2'},
-      'sample3': {'name': 'sample3'},
-      'sample4': {'name': 'sample4'}
     },
     homepageValues: [],
     homepageCharts: []
@@ -37,11 +33,6 @@ const store = new Vuex.Store({
     getDate (state, currentDate) {
       state.sysDate = currentDate
     },
-    updateList (state, item) {
-      if (item.type === 1) state.boxList = item.list
-      else if (item.type === 2) state.chartList = item.list
-      else if (item.type === 3) state.freeList = item.list
-    },
     getWarehouse (state, list) {
       state.warehouseList = list
     },
@@ -49,7 +40,7 @@ const store = new Vuex.Store({
       state.dateCycleList = list
     },
     addMetrics (state, p) {
-      state.allMetrics[p.name] = p
+      state.allMetrics[p.funcName] = p
     },
     setHomepageValue (state, p) {
       state.homepageValues = p
@@ -71,6 +62,6 @@ new Vue({
   components: { App },
   store,
   mounted: function () {
-    this.$router.push({ name: 'settings' })
+    this.$router.push({ name: 'login' })
   }
 })
