@@ -120,7 +120,6 @@
 </template>
 
 <script>
-import Sortable from 'sortablejs'
 import draggable from 'vuedraggable'
 export default {
   components: {

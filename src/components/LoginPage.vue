@@ -43,26 +43,91 @@ function renderChart (id, option) {
   }, 50)
 }
 
-function addDate (dd, dadd) {
-  let a = new Date(dd)
-  a = a.valueOf()
-  a = a + dadd * 24 * 60 * 60 * 1000
-  a = new Date(a)
-  let Year = a.getFullYear()
-  let Month = a.getMonth() + 1
-  let Day = a.getDate()
-  let CurrentDate = Year + '/'
-  if (Month >= 10) {
-    CurrentDate += Month + '/'
-  } else {
-    CurrentDate += '0' + Month + '/'
+function getDate (date, gap) {
+  var dd = new Date(date)
+  if (!date) {
+    dd = new Date()
   }
-  if (Day >= 10) {
-    CurrentDate += Day
-  } else {
-    CurrentDate += '0' + Day
+  var n = gap || 0
+  dd.setDate(dd.getDate() + n)
+  var y = dd.getFullYear()
+  var m = dd.getMonth() + 1
+  var d = dd.getDate()
+  m = m < 10 ? '0' + m : m
+  d = d < 10 ? '0' + d : d
+  var day = y + '/' + m + '/' + d
+  return day
+}
+
+function getWeek (date, type, gap) {
+  var now = new Date(date)
+  if (!date) {
+    now = new Date()
   }
-  return CurrentDate
+  var nowTime = now.getTime()
+  var day = now.getDay()
+  var longTime = 24 * 60 * 60 * 1000
+  var n = longTime * 7 * (gap || 0)
+  var dd = now
+  if (type === 's') {
+    dd = nowTime - (day - 1) * longTime + n
+  }
+  if (type === 'e') {
+    dd = nowTime + (7 - day) * longTime + n
+  }
+  dd = new Date(dd)
+  var y = dd.getFullYear()
+  var m = dd.getMonth() + 1
+  var d = dd.getDate()
+  m = m < 10 ? '0' + m : m
+  d = d < 10 ? '0' + d : d
+  day = y + '/' + m + '/' + d
+  return day
+}
+
+function getMonth (date, type, gap) {
+  var d = new Date(date)
+  if (!date) {
+    d = new Date()
+  }
+  var year = d.getFullYear()
+  var month = d.getMonth() + 1
+  if (Math.abs(gap) > 12) {
+    gap = gap % 12
+  }
+  gap = gap || 0
+  if (gap !== 0) {
+    if (month + gap > 12) {
+      year++
+      month = (month + gap) % 12
+    } else if (month + gap < 1) {
+      year--
+      month = 12 + month + gap
+    } else {
+      month = month + gap
+    }
+  }
+  month = month < 10 ? '0' + month : month
+  var firstday = year + '/' + month + '/' + '01'
+  var lastday = ''
+  if (month === '01' || month === '03' || month === '05' || month === '07' || month === '08' || month === '10' || month === '12') {
+    lastday = year + '-' + month + '-' + 31
+  } else if (month === '02') {
+    if ((year % 4 === 0 && year % 100 !== 0) || (year % 100 === 0 && year % 400 === 0)) {
+      lastday = year + '/' + month + '/' + 29
+    } else {
+      lastday = year + '/' + month + '/' + 28
+    }
+  } else {
+    lastday = year + '/' + month + '/' + 30
+  }
+  var day = ''
+  if (type === 's') {
+    day = firstday
+  } else {
+    day = lastday
+  }
+  return day
 }
 
 function initVue (components) {
@@ -265,6 +330,13 @@ export default {
     // let a = new Date()
     // console.log(getWeekOfYear(a))
     this.$store.commit('getDate', '2017/10/31')
+    var sysDate = getDate(null, -1)
+    console.log(sysDate)
+    // console.log(getDate('2017/10/31', -1))
+    console.log(getWeek(sysDate, 's'))
+    console.log(getWeek(sysDate, 'e'))
+    console.log(getMonth(sysDate, 's'))
+    console.log(getMonth(sysDate, 'e'))
   }
 }
 </script>
