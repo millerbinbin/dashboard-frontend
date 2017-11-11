@@ -10,7 +10,7 @@
         <v-form v-model="valid" ref="form">
           <v-text-field label="账号" v-model="username" :rules="nameRules" required></v-text-field>
           <v-text-field label="密码" v-model="password" :rules="pwdRules" type="password" required></v-text-field>
-          <v-alert v-show="!verified" color="error" icon="warning" style="font-size: .75em" value="true">
+          <v-alert v-show="!verified" color="error" icon="warning" style="font-size: .625em" value="true">
             {{ errorMsg }}
           </v-alert>
           <v-layout row wrap>
@@ -35,6 +35,7 @@ let serverUrl = 'http://localhost:8080/dashboard-web/api'
 var echarts = require('echarts')
 
 function renderChart (id, option) {
+  console.log(id)
   setTimeout(function () {
     if (document.getElementById(id)) {
       var myChart = echarts.init(document.getElementById(id))
@@ -43,7 +44,7 @@ function renderChart (id, option) {
   }, 50)
 }
 
-function getDate (date, gap) {
+function addDate (date, gap) {
   var dd = new Date(date)
   if (!date) {
     dd = new Date()
@@ -59,7 +60,17 @@ function getDate (date, gap) {
   return day
 }
 
-function getWeek (date, type, gap) {
+function getWeekOfYear (date) {
+  var dd = new Date(date)
+  let year = dd.getFullYear()
+  let d1 = dd
+  let d2 = new Date(year, 0, 1)
+
+  let d = Math.round((d1 - d2) / (24 * 60 * 60 * 1000))
+  return year + 'W' + (Math.ceil((d + ((d2.getDay() + 1) - 1)) / 7))
+}
+
+function getWeekDuration (date, type, gap) {
   var now = new Date(date)
   if (!date) {
     now = new Date()
@@ -85,7 +96,15 @@ function getWeek (date, type, gap) {
   return day
 }
 
-function getMonth (date, type, gap) {
+function getMonthOfYear (date) {
+  var d = new Date(date)
+  var y = d.getFullYear()
+  var m = d.getMonth() + 1
+  m = m < 10 ? '0' + m : m
+  return y + 'M' + m
+}
+
+function getMonthDuration (date, type, gap) {
   var d = new Date(date)
   if (!date) {
     d = new Date()
@@ -140,8 +159,13 @@ function initVue (components) {
             data: {}
           }
         },
-        created: function () {
-          axios.get(serverUrl + '/value/' + comp.id)
+        methods: {
+          goDetails: function (funcId) {
+            this.$router.push({ path: 'detail/' + funcId })
+          }
+        },
+        mounted: function () {
+          axios.get(serverUrl + '/value/' + comp.id + '/day')
             .then(function (response) {
               this.data = response.data
             }.bind(this))
@@ -156,34 +180,36 @@ function initVue (components) {
         template: comp.chartTemplate,
         data: function () {
           return {
-            data: {}
+            data: {},
+            sysDate: '',
+            sysDateBefore: ''
           }
         },
         methods: {
           goDetails: function (funcId) {
-            this.$router.push({ path: 'detail' + '/' + funcId })
+            this.$router.push({ path: 'detail/' + funcId })
           }
         },
         mounted: function () {
+          this.sysDate = this.$store.state.sysDate
+          this.sysDateBefore = addDate(this.sysDate, -7)
           var that = this
-          axios.get(serverUrl + '/value/' + comp.id)
+          axios.get(serverUrl + '/value/' + comp.id + '/day')
             .then(function (response) {
               that.data = (response.data)
             })
             .catch(function (error) {
               console.log(error)
             })
-
-          axios.get(serverUrl + '/chart/' + comp.id)
+          axios.get(serverUrl + '/chart/' + comp.id + '/day')
             .then(function (response) {
               var data = response.data
-              var key = 'day'
-              axios.get(serverUrl + '/chartOption/' + comp.id + '/' + key)
-                .then(function (reponse2) {
+              axios.get(serverUrl + '/chartOption/' + comp.id + '/day')
+                .then(function (response2) {
                   var option = (function (res, optionstr) {
                     return eval('(' + optionstr + ')')
-                  })(data[key], reponse2.data)
-                  renderChart(comp.id + '-' + key, option)
+                  })(data, response2.data)
+                  renderChart(comp.id + '-day', option)
                 }).catch(function (error) {
                   console.log(error)
                 })
@@ -258,16 +284,11 @@ export default {
           console.log(err)
         })
     },
-    getWeekOfYear (date) {
-      let d1 = date
-      let d2 = new Date(date.getFullYear(), 0, 1)
-      let d = Math.round((d1 - d2) / (24 * 60 * 60 * 1000))
-      return Math.ceil((d + ((d2.getDay() + 1) - 1)) / 7)
-    },
     getFuncs () {
       let funcUrl = serverUrl + '/func'
       let numberList = []
       let chartList = []
+      let freeList = []
       var that = this
       axios.get(funcUrl)
         .then(function (res) {
@@ -277,10 +298,13 @@ export default {
               numberList.push(item)
             } else if (item.funcType === 2) {
               chartList.push(item)
+            } else if (item.funcType === 1) {
+              freeList.push(item)
             }
           })
           that.$store.commit('setHomepageValue', numberList)
           that.$store.commit('setHomepageChart', chartList)
+          that.$store.commit('setHomepageFree', freeList)
           that.$router.push({ name: 'homepage' })
         })
         .catch(function (err) {
@@ -300,43 +324,40 @@ export default {
         })
     },
     submit () {
-      // this.username = this.username.toLowerCase()
-      // if (this.$refs.form.validate()) {
-      //   this.$http.post(serverUrl + '/user/login', {
-      //     username: this.username,
-      //     password: this.password
-      //   }).then(function (res) {
-      //     // let that = this
-      //     if (res.data.errors === undefined || res.data.errors.length === 0) {
-      //       this.$store.commit('getUser', this.username)
-      //       this.$http.all([this.getConf(), this.getDateCycle()])
-      //         .then(this.$http.spread(function (acct, perms) {
-      //           // Both requests are now complete
-      //         }))
-      //     } else {
-      //       this.verified = false
-      //       this.errorMsg = res.data.errors[0].msg
-      //       this.$refs.form.reset()
-      //     }
-      //   }.bind(this))
-      //     .catch(function (err) {
-      //       console.log(err)
-      //     })
-      // }
-      this.getModels()
+      this.username = this.username.toLowerCase()
+      if (this.$refs.form.validate()) {
+        axios.post(serverUrl + '/user/login', {
+          username: this.username,
+          password: this.password
+        }).then(function (res) {
+          if (res.data.errors === undefined || res.data.errors.length === 0) {
+            this.$store.commit('setUser', this.username)
+            axios.all([this.getModels()])
+              .then(axios.spread(function (acct, perms) {
+                // Both requests are now complete
+              }))
+          } else {
+            this.verified = false
+            this.errorMsg = res.data.errors[0].msg
+            this.$refs.form.reset()
+          }
+        }.bind(this))
+          .catch(function (err) {
+            console.log(err)
+          })
+      }
     }
   },
   mounted: function () {
-    // let a = new Date()
-    // console.log(getWeekOfYear(a))
-    this.$store.commit('getDate', '2017/10/31')
-    var sysDate = getDate(null, -1)
+    var sysDate = '2017/10/31'
+    this.$store.commit('setDate', sysDate)
+    var sysWeek = getWeekOfYear(sysDate) + '(' + getWeekDuration(sysDate, 's') + '-' + getWeekDuration(sysDate, 'e') + ')'
+    this.$store.commit('setWeek', sysWeek)
+    var sysMonth = getMonthOfYear(sysDate) + '(' + getMonthDuration(sysDate, 's') + '-' + getMonthDuration(sysDate, 'e') + ')'
+    this.$store.commit('setMonth', sysMonth)
     console.log(sysDate)
-    // console.log(getDate('2017/10/31', -1))
-    console.log(getWeek(sysDate, 's'))
-    console.log(getWeek(sysDate, 'e'))
-    console.log(getMonth(sysDate, 's'))
-    console.log(getMonth(sysDate, 'e'))
+    console.log(sysWeek)
+    console.log(sysMonth)
   }
 }
 </script>

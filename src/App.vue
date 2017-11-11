@@ -110,51 +110,35 @@ export default {
   .card {
     background-color: #2E3C51!important;
     color: #fff!important;
+    box-shadow: 5px 5px 5px #111!important;
   }
 
   .flex.xs6 .card {
-    padding: 5px;
+    padding: 4px;
     height: 90px!important;
   }
 
-  .flex .box-func-name-tag {
+  .flex .box-func-name-tag, .chart-func-name-tag  {
     font-size: 0.75em;
-    padding-top: 10px;
-    padding-bottom: 0px;
+    padding-top: 10px!important;
   }
 
-  .flex .box-func-value-tag {
+  .flex .box-func-value-tag, .chart-func-value-tag {
     font-size: 1.25em;
     padding-top: 5px;
-    padding-bottom: 0px;
   }
 
-  .flex .box-idx-name {
+  .chart {
+  	padding-top: 10px;
+  }
+
+  .flex .box-idx-name, .chart-idx-name {
     font-size: .5em;
   }
 
-  .box-idx-value {
-    font-size: 1.35em;
-  }
-
-  .flex .chart-func-name-tag {
-    font-size: 0.75em;
-    padding-top: 10px;
-    padding-bottom: 0px;
-  }
-
-  .flex .chart-func-value-tag {
-    font-size: 1.25em;
-    padding-top: 5px;
-    padding-bottom: 0px;
-  }
-
-  .flex .chart-idx-name {
-    font-size: .5em;
-  }
-
-  .chart-idx-value {
-    font-size: 1.35em;
+  .box-idx-value, .chart-idx-value {
+    font-size: .75em;
+    font-weight: bold;
   }
 
   .flex.xs12 .chart-header {
@@ -179,14 +163,13 @@ export default {
     box-shadow: none
   }
 
-
   .flex.xs12 .chart-detail {
     padding: 0px 2px 2px 2px!important
   }
 
   .flex.xs12.chart-detail .card {
     padding: 5px;
-    height: 240px!important;
+    height: 200px!important;
     background-color: #2E3C51!important;
     box-shadow: none;
     text-align: left!important;
@@ -206,16 +189,12 @@ export default {
   }
 
   .flex .chart-detail-idx-name {
-    font-size: .75em;
+    font-size: .7em;
     color: #6e88ac;
   }
 
-  .chart-idx-value {
-    font-size: 1.35em;
-  }
-
   .chart-detail-idx-value {
-    font-size: 1.125em;
+    font-size: 1em;
     color: #FFF;
     padding-left: 10px;
     padding-bottom: 10px!important;
@@ -328,7 +307,7 @@ export default {
   .list__tile__content {
   	color: #FFF;
   }
-  
+
   .application--light .list .list__tile__sub-title, .application--light .list .subheader {
   	color: #FFF;
   }

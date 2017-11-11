@@ -105,17 +105,18 @@
                 </draggable>
               </v-list>
             </v-card>
-            <v-layout row wrap text-xs-center>
-              <v-flex xs4 offset-xs4 v-on:click="goDesc">
-                <i class="material-icons md-16 yellow100" >info</i><span>数据定义</span>
-              </v-flex>
-              <v-flex xs2 offset-xs10 style="font-size: .625em" v-on:click="goLogin">退出登录</v-flex>
-            </v-layout>
+            
           </v-tabs-content>
 
         </v-tabs-items>
       </v-tabs>
     </main>
+    <v-layout row wrap text-xs-center>
+              <v-flex xs4 offset-xs4 v-on:click="goDesc">
+                <i class="material-icons md-16 yellow100" >info</i><span>数据定义</span>
+              </v-flex>
+              <v-flex xs2 offset-xs10 style="font-size: .625em" v-on:click="goLogin">退出登录</v-flex>
+            </v-layout>
   </v-container>
 </template>
 
@@ -164,13 +165,17 @@ export default {
       tmp.funcType = 1 + this.comp_chart_option[name]
       this.$store.commit('addMetrics', tmp)
       var array = []
+      var array2 = []
       for (var key in this.comp_value_option) {
         if (this.comp_value_option[key] === 1) {
           array.push(this.$store.state.allMetrics[key])
+        } else if (this.comp_value_option[key] === 0) {
+          array2.push(this.$store.state.allMetrics[key])
         }
       }
       this.valueOptions = array
       this.$store.commit('setHomepageValue', this.valueOptions)
+      this.$store.commit('setHomepageFree', array2)
     },
     toggleChartOption: function (item, onClick) {
       var name = item.funcName
@@ -183,13 +188,17 @@ export default {
       tmp.funcType = 1 + this.comp_chart_option[name]
       this.$store.commit('addMetrics', tmp)
       var array = []
+      var array2 = []
       for (var key in this.comp_chart_option) {
         if (this.comp_chart_option[key] === 1) {
           array.push(this.$store.state.allMetrics[key])
+        } else if (this.comp_value_option[key] === 0) {
+          array2.push(this.$store.state.allMetrics[key])
         }
       }
       this.chartOptions = array
       this.$store.commit('setHomepageChart', this.chartOptions)
+      this.$store.commit('setHomepageFree', array2)
     }
   },
   created: function () {

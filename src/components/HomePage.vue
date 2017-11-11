@@ -20,18 +20,16 @@
       <v-flex xs6 user-tag>{{ this.sysUser }}</v-flex>
       <v-flex xs6 date-tag>数据日期：{{ this.sysDate }}</v-flex>
     </v-layout>
-    <v-container grid-list-sm text-xs-left pt-0>
-      <number-view></number-view>
-      <chart-view></chart-view>
-    </v-container>
-    <v-layout row wrap text-xs-center>
+    <number-view></number-view>
+    <chart-view></chart-view>
+    <v-layout row wrap text-xs-center v-if="this.$store.state.homepageFree.length > 0">
       <v-flex xs12 circle-bar>
         <v-card>
           <i class="material-icons md-32 grey100" v-on:click="goSettings">add_circle</i>
         </v-card>
       </v-flex>
-      <v-flex xs3 v-for="(item, idx) in this.$store.state.freeList" :key="idx">
-        <v-card> {{ item.funcName }} </v-card>
+      <v-flex xs3 v-for="(item, idx) in this.$store.state.homepageFree" :key="idx" @click="goDetails(item.id)">
+        <v-card style="font-size: .8em"> {{ item.funcName }} </v-card>
       </v-flex>
     </v-layout>
   </v-container>
@@ -49,7 +47,6 @@ export default {
       render: function (c) {
         let list = []
         this.numberComps.map(function (item) {
-          console.log(item)
           list.push(c(item, {}))
         })
         if (list.length % 2 === 0) {
@@ -64,7 +61,6 @@ export default {
         this.$store.state.homepageValues.forEach(function (item) {
           that.numberComps.push(item.id + '-number')
         })
-        console.log(that.numberComps)
       }
     },
     'chart-view': {
@@ -78,7 +74,7 @@ export default {
         this.chartComps.map(function (item) {
           list.push(c(item, {}))
         })
-        return c('div', {'class': {layout: true, row: true, wrap: true}}, list)
+        return c('div', {'class': {layout: true, row: true, wrap: true, chart: true}}, list)
       },
       mounted: function () {
         var that = this
@@ -91,6 +87,9 @@ export default {
   methods: {
     goSettings: function () {
       this.$router.push({ path: 'settings' })
+    },
+    goDetails: function (funcId) {
+      this.$router.push({ path: 'detail/' + funcId })
     }
   },
   data: function () {
@@ -108,6 +107,7 @@ export default {
   },
   mounted: function () {
     this.sysDate = this.$store.state.sysDate
+    this.sysUser = this.$store.state.sysUser
     this.a1 = this.warehouseList[0]
     let allnumbercomp = [12, 12, 27]
   }

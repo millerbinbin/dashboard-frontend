@@ -1,12 +1,12 @@
 <template>
-  <v-container grid-list-sm text-xs-left pt-0>
+  <v-container grid-list-sm text-xs-left pt-0 v-if="data.value">
     <v-card class="top-bar">
       <v-layout row wrap text-xs-center>
         <v-flex xs2 style="font-size: 1.25em">
           <v-btn icon v-on:click="goBack">返回</v-btn>
         </v-flex>
         <v-flex xs6 offset-xs1>
-          <span style="font-size: 1.375em;">{{data.day.f1}}</span>
+          <span style="font-size: 1.375em;">{{data.value.f1}}</span>
         </v-flex>
       </v-layout>
     </v-card>
@@ -17,7 +17,7 @@
             <v-select v-bind:items="dateCycleList" v-model="a1" item-text="dateCycle" single-line bottom ></v-select>
           </v-flex>
           <v-flex xs7 style="padding-top: 15px; padding-left: 5px; font-size: .625em">
-            <span>{{ a1.period }}</span>
+            <span>{{period}}</span>
           </v-flex>
           <v-flex xs2 text-xs-right style="padding-top: 15px; font-size: .625em">
             <span style="font-weight: bold;">全部仓库</span>
@@ -26,41 +26,77 @@
       </v-flex>
     </v-layout>
     <v-layout row wrap>
-      <v-flex xs12 chart-detail-header v-if="data">
+      <v-flex xs12 chart-detail-header>
         <v-card>
           <v-layout row wrap>
-             <v-flex xs4>
+             <v-flex xs5>
               <v-layout row wrap>
-                <v-flex xs6 chart-detail-func-name-tag>{{data.day.f1}}</v-flex>
+                <v-flex xs6 chart-detail-func-name-tag>{{data.value.f1}}</v-flex>
                 <v-flex xs2 text-xs-right>
                   <v-tooltip right>
                     <i class="material-icons md-16 yellow100" slot="activator">info</i>
-                    <span>{{ data.day.v3}}</span>
+                    <span>asdf</span>
                   </v-tooltip>
                 </v-flex>
-                <v-flex xs12 chart-detail-func-value-tag>{{data.day.v1}}</v-flex>
+                <v-flex xs12 chart-detail-func-value-tag>{{data.value.v1}}</v-flex>
                 <v-flex xs8><div class="under-bar"></div></v-flex>
               </v-layout>
             </v-flex>
-            <v-flex xs4 chart-detail-idx-name>
-              <span >{{data.day.f2}}<span class="chart-detail-idx-value">{{data.day.v2}}</span>
-              <div v-if="data.day.v2 > 0" class="trending-up"></div>
-              <div v-else-if="data.day.v2 == 0" class="trending-flat"></div>
-              <div v-else-if="data.day.v2 < 0" class="trending-down"></div></span>
-              <br><br><span>{{data.day.f2}}<span class="chart-detail-idx-value">{{data.day.v2}}</span>
-              <div v-if="data.day.v2 > 0" class="trending-up"></div>
-              <div v-else-if="data.day.v2 == 0" class="trending-flat"></div>
-              <div v-else-if="data.day.v2 < 0" class="trending-down"></div></span>
+            <v-flex xs4 chart-detail-idx-name text-xs-center>
+              <v-layout row wrap style="padding-bottom: 10px">
+                <v-flex xs5>
+                  <span>{{data.value.f4}}</span>    
+                </v-flex>
+                <v-flex xs5 chart-detail-idx-value>
+                  {{data.value.v4}}   
+                </v-flex>
+                <v-flex xs2 text-xs-left>
+                  <div v-if="data.value.v2 > 0" class="trending-up"></div>
+                  <div v-else-if="data.value.v2 == 0" class="trending-flat"></div>
+                  <div v-else-if="data.value.v2 < 0" class="trending-down"></div></span>
+                </v-flex>
+              </v-layout>
+              <v-layout row wrap>
+                <v-flex xs5>
+                  {{data.value.f5}}  
+                </v-flex>
+                <v-flex xs5 chart-detail-idx-value>
+                  {{data.value.v5}}
+                </v-flex>
+                <v-flex xs2 text-xs-left>
+                  <div v-if="data.value.v3 > 0" class="trending-up"></div>
+                  <div v-else-if="data.value.v3 == 0" class="trending-flat"></div>
+                  <div v-else-if="data.value.v3 < 0" class="trending-down"></div></span>
+                </v-flex>
+              </v-layout>
             </v-flex>
-            <v-flex xs4 chart-detail-idx-name>
-              <span >{{data.day.f3}}<span class="chart-detail-idx-value">{{data.day.v3}}%</span>
-              <div v-if="data.day.v3 > 0" class="trending-up"></div>
-              <div v-else-if="data.day.v3 == 0" class="trending-flat"></div>
-              <div v-else-if="data.day.v3 < 0" class="trending-down"></div></span>
-              <br><br><span >{{data.day.f3}}<span class="chart-detail-idx-value">{{data.day.v3}}%</span>
-              <div v-if="data.day.v3 > 0" class="trending-up"></div>
-              <div v-else-if="data.day.v3 == 0" class="trending-flat"></div>
-              <div v-else-if="data.day.v3 < 0" class="trending-down"></div></span>
+            <v-flex xs3 chart-detail-idx-name>
+              <v-layout row wrap style="padding-bottom: 10px">
+                <v-flex xs5 offset-xs1>
+                  {{data.value.f2}}    
+                </v-flex>
+                <v-flex xs4 chart-detail-idx-value>
+                  {{data.value.v2}}%
+                </v-flex>
+                <v-flex xs2 text-xs-left>
+                  <div v-if="data.value.v2 > 0" class="trending-up"></div>
+                  <div v-else-if="data.value.v2 == 0" class="trending-flat"></div>
+                  <div v-else-if="data.value.v2 < 0" class="trending-down"></div></span>
+                </v-flex>
+              </v-layout>
+              <v-layout row wrap>
+                <v-flex xs5 offset-xs1>
+                  {{data.value.f3}}    
+                </v-flex>
+                <v-flex xs4 chart-detail-idx-value>
+                  {{data.value.v3}}%
+                </v-flex>
+                <v-flex xs2 text-xs-left>
+                  <div v-if="data.value.v3 > 0" class="trending-up"></div>
+                  <div v-else-if="data.value.v3 == 0" class="trending-flat"></div>
+                  <div v-else-if="data.value.v3 < 0" class="trending-down"></div></span>
+                </v-flex>
+              </v-layout>
             </v-flex>
           </v-layout>
         </v-card>
@@ -73,10 +109,14 @@
             </v-card>
             <v-card style="height: 30px!important">
               <v-layout row wrap>
-                  <v-flex xs1 offset-xs3 grey-bar></v-flex>
-                  <v-flex xs2 chart-idx-name>aaa</v-flex>
-                  <v-flex xs1 cyan-bar></v-flex>
-                  <v-flex xs2 chart-idx-name>bbb</v-flex>
+                <v-flex xs8 offset-xs2>
+                  <v-layout row wrap>
+                    <v-flex xs1 offset-xs2 grey-bar></v-flex>
+                    <v-flex xs3 chart-idx-name>{{sysDateBefore}}</v-flex>
+                    <v-flex xs1 cyan-bar offset-xs1></v-flex>
+                    <v-flex xs3 chart-idx-name>{{sysDate}}</v-flex>
+                  </v-layout>
+                </v-flex>
               </v-layout>
             </v-card> 
           </v-flex>
@@ -122,13 +162,16 @@ export default {
       dayChartId: null,
       weekChartId: null,
       monthChartId: null,
+      sysDateBefore: '',
+      sysDate: '',
+      period: '',
       expand: 'remove',
       dateCycleList: [
         { dateCycle: '日', id: 1, period: '2017/10/31' },
         { dateCycle: '周', id: 2, period: 'W12(2017/10/24-2017/10/31)' },
         { dateCycle: '月', id: 3, period: 'M10(2017/10/01-2017/10/31)' }
       ],
-      data: null,
+      data: {},
       headers: [
         {
           text: 'Dessert (100g serving)',
@@ -211,32 +254,41 @@ export default {
         this.showingDay = true
         this.showingWeek = false
         this.showingMonth = false
+        this.renderNumber(this.$route.params.id, 'day')
+        this.period = this.$store.state.sysDate
       } else if (val.dateCycle === '周') {
         this.showingDay = false
         this.showingWeek = true
         this.showingMonth = false
+        this.renderNumber(this.$route.params.id, 'week')
+        this.period = this.$store.state.sysWeek
       } else if (val.dateCycle === '月') {
         this.showingDay = false
         this.showingWeek = false
         this.showingMonth = true
+        this.renderNumber(this.$route.params.id, 'month')
+        this.period = this.$store.state.sysMonth
       }
     },
-    renderNumber (funcId) {
-      axios.get(serverUrl + '/value/' + funcId)
-        .then(function (response) {
-          this.data = response.data
-        }.bind(this))
-        .catch(function (error) {
-          console.log(error)
-        })
+    renderNumber (funcId, dateCycle) {
+      if (dateCycle !== undefined) {
+        axios.get(serverUrl + '/value/' + funcId + '/' + dateCycle)
+          .then(function (response) {
+            this.data = response.data
+          }.bind(this))
+          .catch(function (error) {
+            console.log(error)
+          })
+      }
     }
   },
   mounted: function () {
+    this.sysDate = this.$store.state.sysDate
+    this.sysDateBefore = addDate(this.sysDate, -7)
     var funcId = this.$route.params.id
     this.dayChartId = funcId + '-day'
     this.weekChartId = funcId + '-week'
     this.monthChartId = funcId + '-month'
-    this.renderNumber(this.$route.params.id)
     axios.get(serverUrl + '/chart/' + funcId)
       .then(function (response) {
         var data = response.data
@@ -265,6 +317,7 @@ function renderChart (id, option) {
     if (document.getElementById(id)) {
       var myChart = echarts.init(document.getElementById(id))
       myChart.setOption(option)
+      myChart.resize()
     }
   }, 50)
 }

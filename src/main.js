@@ -24,19 +24,26 @@ const store = new Vuex.Store({
     allMetrics: {
     },
     homepageValues: [],
-    homepageCharts: []
+    homepageCharts: [],
+    homepageFree: []
   },
   mutations: {
-    getUser (state, username) {
+    setUser (state, username) {
       state.sysUser = username
     },
-    getDate (state, currentDate) {
+    setDate (state, currentDate) {
       state.sysDate = currentDate
     },
-    getWarehouse (state, list) {
+    setWeek (state, currentWeek) {
+      state.sysWeek = currentWeek
+    },
+    setMonth (state, currentMonth) {
+      state.sysMonth = currentMonth
+    },
+    setWarehouse (state, list) {
       state.warehouseList = list
     },
-    getDateCycle (state, list) {
+    setDateCycle (state, list) {
       state.dateCycleList = list
     },
     addMetrics (state, p) {
@@ -47,6 +54,9 @@ const store = new Vuex.Store({
     },
     setHomepageChart (state, p) {
       state.homepageCharts = p
+    },
+    setHomepageFree (state, p) {
+      state.homepageFree = p
     }
   },
   getters: {
