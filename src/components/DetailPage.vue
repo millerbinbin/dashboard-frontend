@@ -103,18 +103,16 @@
         <v-layout row wrap>
           <v-flex xs12 chart-detail>
             <v-card>
-              <div v-show="showingDay" :id="dayChartId" style="width:100vw;height:240px"></div>
-              <div v-show="showingWeek" :id="weekChartId" style="width:100vw;height:240px"></div>
-              <div v-show="showingMonth" :id="monthChartId" style="width:100vw;height:240px"></div>
+              <div :id="chartId" style="width:100%;height:180px"></div>
             </v-card>
             <v-card style="height: 30px!important">
               <v-layout row wrap>
                 <v-flex xs8 offset-xs2>
                   <v-layout row wrap>
-                    <v-flex xs1 offset-xs2 grey-bar></v-flex>
-                    <v-flex xs3 chart-idx-name>{{sysDateBefore}}</v-flex>
-                    <v-flex xs1 cyan-bar offset-xs1></v-flex>
+                    <v-flex xs1 offset-xs2 cyan-bar></v-flex>
                     <v-flex xs3 chart-idx-name>{{sysDate}}</v-flex>
+                    <v-flex xs1 offset-xs1 grey-bar></v-flex>
+                    <v-flex xs3 chart-idx-name>{{sysDateBefore}}</v-flex>
                   </v-layout>
                 </v-flex>
               </v-layout>
@@ -159,9 +157,7 @@ export default {
       showingDay: true,
       showingWeek: false,
       showingMonth: false,
-      dayChartId: null,
-      weekChartId: null,
-      monthChartId: null,
+      chartId: '',
       sysDateBefore: '',
       sysDate: '',
       period: '',
@@ -236,9 +232,6 @@ export default {
       funcId: null
     }
   },
-  created: function () {
-    this.a1 = this.dateCycleList[0]
-  },
   watch: {
     a1: function (val) {
       this.changeChart(val)
@@ -249,30 +242,23 @@ export default {
       this.$router.go(-1)
     },
     changeChart: function (val) {
-      this.renderNumber(this.$route.params.id)
       if (val.dateCycle === '日') {
-        this.showingDay = true
-        this.showingWeek = false
-        this.showingMonth = false
-        this.renderNumber(this.$route.params.id, 'day')
+        this.renderNumber(this.$route.params.id, 'day', this.$store.state.warehouse, this.$store.state.sysDate)
+        this.renderChart(this.$route.params.id, 'day', this.$store.state.warehouse, this.$store.state.sysDate)
         this.period = this.$store.state.sysDate
       } else if (val.dateCycle === '周') {
-        this.showingDay = false
-        this.showingWeek = true
-        this.showingMonth = false
-        this.renderNumber(this.$route.params.id, 'week')
+        this.renderNumber(this.$route.params.id, 'week', this.$store.state.warehouse, this.$store.state.sysDate)
+        this.renderChart(this.$route.params.id, 'week', this.$store.state.warehouse, this.$store.state.sysDate)
         this.period = this.$store.state.sysWeek
       } else if (val.dateCycle === '月') {
-        this.showingDay = false
-        this.showingWeek = false
-        this.showingMonth = true
-        this.renderNumber(this.$route.params.id, 'month')
+        this.renderNumber(this.$route.params.id, 'month', this.$store.state.warehouse, this.$store.state.sysDate)
+        this.renderChart(this.$route.params.id, 'month', this.$store.state.warehouse, this.$store.state.sysDate)
         this.period = this.$store.state.sysMonth
       }
     },
-    renderNumber (funcId, dateCycle) {
+    renderNumber (funcId, dateCycle, warehouse, sysdate) {
       if (dateCycle !== undefined) {
-        axios.get(serverUrl + '/value/' + funcId + '/' + dateCycle)
+        axios.get(serverUrl + '/value/' + funcId + '/' + dateCycle + '?warehouse=' + warehouse + '&sysdate=' + sysdate)
           .then(function (response) {
             this.data = response.data
           }.bind(this))
@@ -280,45 +266,45 @@ export default {
             console.log(error)
           })
       }
+    },
+    renderChart (funcId, dateCycle, warehouse, sysdate) {
+      axios.get(serverUrl + '/chart/' + funcId + '/' + dateCycle + '?warehouse=' + warehouse + '&sysdate=' + sysdate)
+      .then(function (response) {
+        var data = response.data
+        axios.get(serverUrl + '/chartOption/' + funcId + '/' + dateCycle)
+          .then(function (response2) {
+            var option = (function (res, optionstr) {
+              return eval('(' + optionstr + ')')
+            })(data, response2.data)
+            drawChart(funcId, option)
+          }).catch(function (error) {
+            console.log(error)
+          })
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
     }
   },
   mounted: function () {
     this.sysDate = this.$store.state.sysDate
     this.sysDateBefore = addDate(this.sysDate, -7)
     var funcId = this.$route.params.id
-    this.dayChartId = funcId + '-day'
-    this.weekChartId = funcId + '-week'
-    this.monthChartId = funcId + '-month'
-    axios.get(serverUrl + '/chart/' + funcId)
-      .then(function (response) {
-        var data = response.data
-        for (var key in data) {
-          (function (key) {
-            axios.get(serverUrl + '/chartOption/' + funcId + '/' + key)
-            .then(function (reponse2) {
-              var option = (function (res, optionstr) {
-                return eval('(' + optionstr + ')')
-              })(data[key], reponse2.data)
-              renderChart(funcId + '-' + key, option)
-            }).catch(function (error) {
-              console.log(error)
-            })
-          })(key)
-        }
-      })
-      .catch(function (error) {
-        console.log(error)
-      })
+    this.chartId = funcId
+    this.a1 = this.dateCycleList[0]
   }
 }
 
-function renderChart (id, option) {
+function drawChart (id, option) {
   setTimeout(function () {
-    if (document.getElementById(id)) {
-      var myChart = echarts.init(document.getElementById(id))
-      myChart.setOption(option)
-      myChart.resize()
+    var element = document.getElementById(id)
+    var myChart
+    if (element.attributes.length === 2) {
+      myChart = echarts.init(element)
+    } else {
+      myChart = echarts.getInstanceByDom(element)
     }
+    myChart.setOption(option)
   }, 50)
 }
 

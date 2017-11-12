@@ -5,7 +5,7 @@
         <v-card class="top-bar" fixed>
           <v-layout row wrap text-xs-center>
             <v-flex xs4 offset-xs4 filter>
-              <v-select v-bind:items="warehouseList" v-model="a1" item-text="warehouseName" item-value="id" single-line bottom></v-select>
+              <v-select v-bind:items="warehouseList" v-model="warehouse" item-text="warehouseName" single-line bottom></v-select>
             </v-flex>
             <v-flex xs2 offset-xs2>
               <v-btn icon v-on:click="goSettings">
@@ -20,8 +20,8 @@
       <v-flex xs6 user-tag>{{ this.sysUser }}</v-flex>
       <v-flex xs6 date-tag>数据日期：{{ this.sysDate }}</v-flex>
     </v-layout>
-    <number-view></number-view>
-    <chart-view></chart-view>
+    <number-view v-if="showComp"></number-view>
+    <chart-view v-if="showComp"></chart-view>
     <v-layout row wrap text-xs-center v-if="this.$store.state.homepageFree.length > 0">
       <v-flex xs12 circle-bar>
         <v-card>
@@ -92,24 +92,29 @@ export default {
       this.$router.push({ path: 'detail/' + funcId })
     }
   },
+  watch: {
+    warehouse: function (val) {
+      this.$store.commit('setWarehouse', val.id)
+      this.showComp = false
+      this.$nextTick(function () {
+        this.showComp = true
+      })
+    }
+  },
   data: function () {
     return {
-      a1: null,
+      warehouse: null,
       sysUser: 'jd_user',
       sysDate: '2017/11/01',
-      warehouseList: [
-        {warehouseName: '全部仓库', id: 1},
-        {warehouseName: '上海1仓', id: 2},
-        {warehouseName: '上海2仓', id: 3},
-        {warehouseName: '上海3仓', id: 4}
-      ]
+      warehouseList: [],
+      showComp: true
     }
   },
   mounted: function () {
     this.sysDate = this.$store.state.sysDate
     this.sysUser = this.$store.state.sysUser
-    this.a1 = this.warehouseList[0]
-    let allnumbercomp = [12, 12, 27]
+    this.warehouseList = this.$store.state.warehouseList
+    this.warehouse = this.warehouseList[0]
   }
 }
 </script>

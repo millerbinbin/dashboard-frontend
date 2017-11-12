@@ -19,6 +19,7 @@ const store = new Vuex.Store({
     sysDate: '2011/11/11',
     sysWeek: '2011 W33',
     sysMonth: '2011 M10',
+    warehouse: '',
     warehouseList: [],
     dateCycleList: [],
     allMetrics: {
@@ -40,7 +41,10 @@ const store = new Vuex.Store({
     setMonth (state, currentMonth) {
       state.sysMonth = currentMonth
     },
-    setWarehouse (state, list) {
+    setWarehouse (state, warehouse) {
+      state.warehouse = warehouse
+    },
+    setWarehouseList (state, list) {
       state.warehouseList = list
     },
     setDateCycle (state, list) {

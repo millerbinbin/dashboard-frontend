@@ -34,8 +34,7 @@ import axios from 'axios'
 let serverUrl = 'http://localhost:8080/dashboard-web/api'
 var echarts = require('echarts')
 
-function renderChart (id, option) {
-  console.log(id)
+function drawChart (id, option) {
   setTimeout(function () {
     if (document.getElementById(id)) {
       var myChart = echarts.init(document.getElementById(id))
@@ -162,16 +161,21 @@ function initVue (components) {
         methods: {
           goDetails: function (funcId) {
             this.$router.push({ path: 'detail/' + funcId })
+          },
+          renderNumber (funcId, dateCycle, warehouse, sysdate) {
+            if (dateCycle !== undefined) {
+              axios.get(serverUrl + '/value/' + funcId + '/' + dateCycle + '?warehouse=' + warehouse + '&sysdate=' + sysdate)
+                .then(function (response) {
+                  this.data = response.data
+                }.bind(this))
+                .catch(function (error) {
+                  console.log(error)
+                })
+            }
           }
         },
         mounted: function () {
-          axios.get(serverUrl + '/value/' + comp.id + '/day')
-            .then(function (response) {
-              this.data = response.data
-            }.bind(this))
-            .catch(function (error) {
-              console.log(error)
-            })
+          this.renderNumber(comp.id, 'day', this.$store.state.warehouse, this.$store.state.sysDate)
         }
       })
       Vue.use(comp.name + '-number')
@@ -188,28 +192,28 @@ function initVue (components) {
         methods: {
           goDetails: function (funcId) {
             this.$router.push({ path: 'detail/' + funcId })
-          }
-        },
-        mounted: function () {
-          this.sysDate = this.$store.state.sysDate
-          this.sysDateBefore = addDate(this.sysDate, -7)
-          var that = this
-          axios.get(serverUrl + '/value/' + comp.id + '/day')
-            .then(function (response) {
-              that.data = (response.data)
-            })
-            .catch(function (error) {
-              console.log(error)
-            })
-          axios.get(serverUrl + '/chart/' + comp.id + '/day')
+          },
+          renderNumber (funcId, dateCycle, warehouse, sysdate) {
+            if (dateCycle !== undefined) {
+              axios.get(serverUrl + '/value/' + funcId + '/' + dateCycle + '?warehouse=' + warehouse + '&sysdate=' + sysdate)
+                .then(function (response) {
+                  this.data = response.data
+                }.bind(this))
+                .catch(function (error) {
+                  console.log(error)
+                })
+            }
+          },
+          renderChart (funcId, dateCycle, warehouse, sysdate) {
+            axios.get(serverUrl + '/chart/' + funcId + '/' + dateCycle + '?warehouse=' + warehouse + '&sysdate=' + sysdate)
             .then(function (response) {
               var data = response.data
-              axios.get(serverUrl + '/chartOption/' + comp.id + '/day')
+              axios.get(serverUrl + '/chartOption/' + funcId + '/' + dateCycle)
                 .then(function (response2) {
                   var option = (function (res, optionstr) {
                     return eval('(' + optionstr + ')')
                   })(data, response2.data)
-                  renderChart(comp.id + '-day', option)
+                  drawChart(funcId + '-' + dateCycle, option)
                 }).catch(function (error) {
                   console.log(error)
                 })
@@ -217,6 +221,13 @@ function initVue (components) {
             .catch(function (error) {
               console.log(error)
             })
+          }
+        },
+        mounted: function () {
+          this.sysDate = this.$store.state.sysDate
+          this.sysDateBefore = addDate(this.sysDate, -7)
+          this.renderNumber(comp.id, 'day', this.$store.state.warehouse, this.$store.state.sysDate)
+          this.renderChart(comp.id, 'day', this.$store.state.warehouse, this.$store.state.sysDate)
         }
       })
       Vue.use(comp.id + '-chart')
@@ -264,10 +275,11 @@ export default {
   methods: {
     getWarehouse () {
       let warehouseUrl = serverUrl + '/dim/warehouse'
-      this.$http.get(warehouseUrl)
+      axios.get(warehouseUrl)
         .then(function (res) {
-          this.$store.commit('getWarehouse', res.data)
-          this.getDateCycle()
+          this.$store.commit('setWarehouse', res.data[0].id)
+          this.$store.commit('setWarehouseList', res.data)
+          this.getModels()
         }.bind(this))
         .catch(function (err) {
           console.log(err)
@@ -275,10 +287,9 @@ export default {
     },
     getDateCycle () {
       let dateCycleUrl = serverUrl + '/dim/datecycle'
-      this.$http.get(dateCycleUrl)
+      axios.get(dateCycleUrl)
         .then(function (res) {
-          this.$store.commit('getDateCycle', res.data)
-          this.getModels()
+          this.$store.commit('setDateCycle', res.data)
         }.bind(this))
         .catch(function (err) {
           console.log(err)
@@ -332,7 +343,7 @@ export default {
         }).then(function (res) {
           if (res.data.errors === undefined || res.data.errors.length === 0) {
             this.$store.commit('setUser', this.username)
-            axios.all([this.getModels()])
+            axios.all([this.getWarehouse(), this.getDateCycle()])
               .then(axios.spread(function (acct, perms) {
                 // Both requests are now complete
               }))
@@ -355,9 +366,6 @@ export default {
     this.$store.commit('setWeek', sysWeek)
     var sysMonth = getMonthOfYear(sysDate) + '(' + getMonthDuration(sysDate, 's') + '-' + getMonthDuration(sysDate, 'e') + ')'
     this.$store.commit('setMonth', sysMonth)
-    console.log(sysDate)
-    console.log(sysWeek)
-    console.log(sysMonth)
   }
 }
 </script>
