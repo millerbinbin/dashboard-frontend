@@ -2,15 +2,15 @@
   <v-container grid-list-sm text-xs-center>
     <v-card class="top-bar">
       <v-layout row wrap text-xs-center>
-        <v-flex xs2 style="font-size: 1.25em">
+        <v-flex xs2 topbar-left>
           <v-btn icon v-on:click="goBack">返回</v-btn>
         </v-flex>
-        <v-flex xs6 offset-xs1>
-          <span style="font-size: 1.375em;">数据定义</span>
+        <v-flex xs6 offset-xs1 topbar-center>
+          数据定义
         </v-flex>
       </v-layout>
     </v-card>
-    <v-card flat v-for="(d, idx) in desc">
+    <v-card flat v-for="(d, idx) in desc" :key="d.name">
       <v-list one-line subheader>
         <v-subheader><b>{{ d.name }}</b></v-subheader>
         <v-list-tile avatar>
@@ -39,7 +39,7 @@
 import Vue from 'vue'
 import axios from 'axios'
 let serverUrl = 'http://localhost:8080/dashboard-web/api'
-
+let descUrl = serverUrl + '/desc'
 export default {
   data: function () {
     return {
@@ -51,7 +51,7 @@ export default {
       this.$router.go(-1)
     },
     getDesc: function () {
-      axios.get(serverUrl + '/desc')
+      axios.get(descUrl)
         .then(function (response) {
           this.desc = response.data
         }.bind(this))
@@ -62,7 +62,6 @@ export default {
   },
   mounted: function () {
     this.getDesc()
-    // console.log(this.desc)
   }
 }
 </script>

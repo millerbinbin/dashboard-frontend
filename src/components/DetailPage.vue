@@ -2,11 +2,11 @@
   <v-container grid-list-sm text-xs-left pt-0 v-if="data.value">
     <v-card class="top-bar">
       <v-layout row wrap text-xs-center>
-        <v-flex xs2 style="font-size: 1.25em">
+        <v-flex xs2 topbar-left>
           <v-btn icon v-on:click="goBack">返回</v-btn>
         </v-flex>
-        <v-flex xs6 offset-xs1>
-          <span style="font-size: 1.375em;">{{data.value.f1}}</span>
+        <v-flex xs6 offset-xs1 topbar-center>
+          {{data.value.f1}}
         </v-flex>
       </v-layout>
     </v-card>
@@ -35,7 +35,7 @@
                 <v-flex xs2 text-xs-right>
                   <v-tooltip right>
                     <i class="material-icons md-16 yellow100" slot="activator">info</i>
-                    <span>asdf</span>
+                    <span>{{tip}}</span>
                   </v-tooltip>
                 </v-flex>
                 <v-flex xs12 chart-detail-func-value-tag>{{data.value.v1}}</v-flex>
@@ -122,7 +122,7 @@
       </v-flex>
       <v-flex xs12>
         <v-data-table v-bind:headers="headers" :items="items" hide-actions item-key="name">
-        <template slot="items" scope="props">
+        <template slot="items" slot-scope="props">
           <tr v-if="props.item.value==true || expand=='remove'">
             <td>
               <i v-if="props.item.value==true" class="material-icons md-8 yellow100" v-on:click="if (expand=='remove') expand='add'; else expand='remove'">
@@ -149,25 +149,28 @@
 import axios from 'axios'
 var echarts = require('echarts')
 let serverUrl = 'http://localhost:8080/dashboard-web/api'
+let valueUrl = serverUrl + '/value'
+let chartUrl = serverUrl + '/chart'
+let chartOptionUrl = serverUrl + '/chartOption'
+let defUrl = serverUrl + '/def'
 
 export default {
   data: function () {
     return {
       a1: null,
-      showingDay: true,
-      showingWeek: false,
-      showingMonth: false,
       chartId: '',
       sysDateBefore: '',
       sysDate: '',
       period: '',
       expand: 'remove',
       dateCycleList: [
-        { dateCycle: '日', id: 1, period: '2017/10/31' },
-        { dateCycle: '周', id: 2, period: 'W12(2017/10/24-2017/10/31)' },
-        { dateCycle: '月', id: 3, period: 'M10(2017/10/01-2017/10/31)' }
+        { dateCycle: '日', id: 1 },
+        { dateCycle: '周', id: 2 },
+        { dateCycle: '月', id: 3 }
       ],
       data: {},
+      def: {},
+      tip: '',
       headers: [
         {
           text: 'Dessert (100g serving)',
@@ -229,7 +232,7 @@ export default {
           iron: '8%'
         }
       ],
-      funcId: null
+      metricId: null
     }
   },
   watch: {
@@ -246,19 +249,34 @@ export default {
         this.renderNumber(this.$route.params.id, 'day', this.$store.state.warehouse, this.$store.state.sysDate)
         this.renderChart(this.$route.params.id, 'day', this.$store.state.warehouse, this.$store.state.sysDate)
         this.period = this.$store.state.sysDate
+        this.tip = this.def.day
       } else if (val.dateCycle === '周') {
         this.renderNumber(this.$route.params.id, 'week', this.$store.state.warehouse, this.$store.state.sysDate)
         this.renderChart(this.$route.params.id, 'week', this.$store.state.warehouse, this.$store.state.sysDate)
         this.period = this.$store.state.sysWeek
+        this.tip = this.def.week
       } else if (val.dateCycle === '月') {
         this.renderNumber(this.$route.params.id, 'month', this.$store.state.warehouse, this.$store.state.sysDate)
         this.renderChart(this.$route.params.id, 'month', this.$store.state.warehouse, this.$store.state.sysDate)
         this.period = this.$store.state.sysMonth
+        this.tip = this.def.month
       }
     },
-    renderNumber (funcId, dateCycle, warehouse, sysdate) {
+    getDef (metricId) {
+      axios.get(defUrl + '/' + metricId)
+        .then(function (response) {
+          this.def = response.data
+          this.tip = this.def.day
+        }.bind(this))
+        .catch(function (error) {
+          console.log(error)
+        })
+    },
+    renderNumber (metricId, dateCycle, warehouse, sysdate) {
       if (dateCycle !== undefined) {
-        axios.get(serverUrl + '/value/' + funcId + '/' + dateCycle + '?warehouse=' + warehouse + '&sysdate=' + sysdate)
+        let query = {metric: metricId, cycle: dateCycle, warehouse: warehouse, sysdate: sysdate}
+        let url = combineUrl(valueUrl, query)
+        axios.get(url)
           .then(function (response) {
             this.data = response.data
           }.bind(this))
@@ -267,16 +285,20 @@ export default {
           })
       }
     },
-    renderChart (funcId, dateCycle, warehouse, sysdate) {
-      axios.get(serverUrl + '/chart/' + funcId + '/' + dateCycle + '?warehouse=' + warehouse + '&sysdate=' + sysdate)
+    renderChart (metricId, dateCycle, warehouse, sysdate) {
+      let query = {metric: metricId, cycle: dateCycle, warehouse: warehouse, sysdate: sysdate}
+      let url = combineUrl(chartUrl, query)
+      axios.get(url)
       .then(function (response) {
         var data = response.data
-        axios.get(serverUrl + '/chartOption/' + funcId + '/' + dateCycle)
+        let query2 = {metric: metricId, cycle: dateCycle}
+        let url2 = combineUrl(chartOptionUrl, query2)
+        axios.get(url2)
           .then(function (response2) {
             var option = (function (res, optionstr) {
               return eval('(' + optionstr + ')')
             })(data, response2.data)
-            drawChart(funcId, option)
+            drawChart(metricId, option)
           }).catch(function (error) {
             console.log(error)
           })
@@ -289,8 +311,9 @@ export default {
   mounted: function () {
     this.sysDate = this.$store.state.sysDate
     this.sysDateBefore = addDate(this.sysDate, -7)
-    var funcId = this.$route.params.id
-    this.chartId = funcId
+    var metricId = this.$route.params.id
+    this.getDef(metricId)
+    this.chartId = metricId
     this.a1 = this.dateCycleList[0]
   }
 }
@@ -328,5 +351,14 @@ function addDate (dd, dadd) {
     CurrentDate += '0' + Day
   }
   return CurrentDate
+}
+
+function combineUrl (url, query) {
+  let paramStr = ''
+  for (let i in query) {
+    if (query[i]) paramStr += '&' + i + '=' + encodeURIComponent(query[i])
+  }
+  paramStr = '/?' + paramStr.substr(1)
+  return url + paramStr
 }
 </script>

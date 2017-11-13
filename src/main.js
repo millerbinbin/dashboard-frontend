@@ -51,7 +51,7 @@ const store = new Vuex.Store({
       state.dateCycleList = list
     },
     addMetrics (state, p) {
-      state.allMetrics[p.funcName] = p
+      state.allMetrics[p.metricName] = p
     },
     setHomepageValue (state, p) {
       state.homepageValues = p

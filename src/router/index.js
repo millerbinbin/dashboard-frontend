@@ -4,11 +4,7 @@ import Login from '@/components/LoginPage'
 import Home from '@/components/HomePage'
 import Detail from '@/components/DetailPage'
 import Settings from '@/components/SettingPage'
-import Desc from '@/components/DescPage'
-// import Settings from '@/components/SettingPage'
-// import Desc from '@/components/DescPage'
-// import Detail from '@/components/DetailPage'
-// import Admin from '@/components/AdminPage'
+import Def from '@/components/DefPage'
 
 Vue.use(Router)
 
@@ -35,29 +31,9 @@ export default new Router({
       component: Settings
     },
     {
-      path: '/desc',
-      name: 'desc',
-      component: Desc
+      path: '/def',
+      name: 'def',
+      component: Def
     }
-    // {
-    //   path: '/settings',
-    //   name: 'settings',
-    //   component: Settings
-    // },
-    // {
-    //   path: '/desc',
-    //   name: 'desc',
-    //   component: Desc
-    // },
-    // {
-    //   path: '/detail',
-    //   name: 'detail',
-    //   component: Detail
-    // },
-    // {
-    //   path: '/admin',
-    //   name: 'admin',
-    //   component: Admin
-    // }
   ]
 })

@@ -32,35 +32,53 @@
 import Vue from 'vue'
 import axios from 'axios'
 let serverUrl = 'http://localhost:8080/dashboard-web/api'
-var echarts = require('echarts')
+let valueUrl = serverUrl + '/value'
+let chartUrl = serverUrl + '/chart'
+let chartOptionUrl = serverUrl + '/chartOption'
+let warehouseUrl = serverUrl + '/dim/warehouse'
+let dateCycleUrl = serverUrl + '/dim/datecycle'
+let loginUrl = serverUrl + '/user/login'
+let metricUrl = serverUrl + '/metric'
+let modelUrl = serverUrl + '/models'
+
+let echarts = require('echarts')
+
+function combineUrl (url, query) {
+  let paramStr = ''
+  for (let i in query) {
+    if (query[i]) paramStr += '&' + i + '=' + encodeURIComponent(query[i])
+  }
+  paramStr = '/?' + paramStr.substr(1)
+  return url + paramStr
+}
 
 function drawChart (id, option) {
   setTimeout(function () {
     if (document.getElementById(id)) {
-      var myChart = echarts.init(document.getElementById(id))
+      let myChart = echarts.init(document.getElementById(id))
       myChart.setOption(option)
     }
   }, 50)
 }
 
 function addDate (date, gap) {
-  var dd = new Date(date)
+  let dd = new Date(date)
   if (!date) {
     dd = new Date()
   }
-  var n = gap || 0
+  let n = gap || 0
   dd.setDate(dd.getDate() + n)
-  var y = dd.getFullYear()
-  var m = dd.getMonth() + 1
-  var d = dd.getDate()
+  let y = dd.getFullYear()
+  let m = dd.getMonth() + 1
+  let d = dd.getDate()
   m = m < 10 ? '0' + m : m
   d = d < 10 ? '0' + d : d
-  var day = y + '/' + m + '/' + d
+  let day = y + '/' + m + '/' + d
   return day
 }
 
 function getWeekOfYear (date) {
-  var dd = new Date(date)
+  let dd = new Date(date)
   let year = dd.getFullYear()
   let d1 = dd
   let d2 = new Date(year, 0, 1)
@@ -70,15 +88,15 @@ function getWeekOfYear (date) {
 }
 
 function getWeekDuration (date, type, gap) {
-  var now = new Date(date)
+  let now = new Date(date)
   if (!date) {
     now = new Date()
   }
-  var nowTime = now.getTime()
-  var day = now.getDay()
-  var longTime = 24 * 60 * 60 * 1000
-  var n = longTime * 7 * (gap || 0)
-  var dd = now
+  let nowTime = now.getTime()
+  let day = now.getDay()
+  let longTime = 24 * 60 * 60 * 1000
+  let n = longTime * 7 * (gap || 0)
+  let dd = now
   if (type === 's') {
     dd = nowTime - (day - 1) * longTime + n
   }
@@ -86,9 +104,9 @@ function getWeekDuration (date, type, gap) {
     dd = nowTime + (7 - day) * longTime + n
   }
   dd = new Date(dd)
-  var y = dd.getFullYear()
-  var m = dd.getMonth() + 1
-  var d = dd.getDate()
+  let y = dd.getFullYear()
+  let m = dd.getMonth() + 1
+  let d = dd.getDate()
   m = m < 10 ? '0' + m : m
   d = d < 10 ? '0' + d : d
   day = y + '/' + m + '/' + d
@@ -96,20 +114,20 @@ function getWeekDuration (date, type, gap) {
 }
 
 function getMonthOfYear (date) {
-  var d = new Date(date)
-  var y = d.getFullYear()
-  var m = d.getMonth() + 1
+  let d = new Date(date)
+  let y = d.getFullYear()
+  let m = d.getMonth() + 1
   m = m < 10 ? '0' + m : m
   return y + 'M' + m
 }
 
 function getMonthDuration (date, type, gap) {
-  var d = new Date(date)
+  let d = new Date(date)
   if (!date) {
     d = new Date()
   }
-  var year = d.getFullYear()
-  var month = d.getMonth() + 1
+  let year = d.getFullYear()
+  let month = d.getMonth() + 1
   if (Math.abs(gap) > 12) {
     gap = gap % 12
   }
@@ -126,8 +144,8 @@ function getMonthDuration (date, type, gap) {
     }
   }
   month = month < 10 ? '0' + month : month
-  var firstday = year + '/' + month + '/' + '01'
-  var lastday = ''
+  let firstday = year + '/' + month + '/' + '01'
+  let lastday = ''
   if (month === '01' || month === '03' || month === '05' || month === '07' || month === '08' || month === '10' || month === '12') {
     lastday = year + '-' + month + '-' + 31
   } else if (month === '02') {
@@ -139,7 +157,7 @@ function getMonthDuration (date, type, gap) {
   } else {
     lastday = year + '/' + month + '/' + 30
   }
-  var day = ''
+  let day = ''
   if (type === 's') {
     day = firstday
   } else {
@@ -149,7 +167,7 @@ function getMonthDuration (date, type, gap) {
 }
 
 function initVue (components) {
-  for (var i = 0; i < components.length; i++) {
+  for (let i = 0; i < components.length; i++) {
     (function (comp) {
       Vue.component(comp.id + '-number', {
         template: comp.numberTemplate,
@@ -159,12 +177,14 @@ function initVue (components) {
           }
         },
         methods: {
-          goDetails: function (funcId) {
-            this.$router.push({ path: 'detail/' + funcId })
+          goDetails: function (metricId) {
+            this.$router.push({ path: 'detail/' + metricId })
           },
-          renderNumber (funcId, dateCycle, warehouse, sysdate) {
+          renderNumber (metricId, dateCycle, warehouse, sysdate) {
             if (dateCycle !== undefined) {
-              axios.get(serverUrl + '/value/' + funcId + '/' + dateCycle + '?warehouse=' + warehouse + '&sysdate=' + sysdate)
+              let query = {metric: metricId, cycle: dateCycle, warehouse: warehouse, sysdate: sysdate}
+              let url = combineUrl(valueUrl, query)
+              axios.get(url)
                 .then(function (response) {
                   this.data = response.data
                 }.bind(this))
@@ -190,12 +210,14 @@ function initVue (components) {
           }
         },
         methods: {
-          goDetails: function (funcId) {
-            this.$router.push({ path: 'detail/' + funcId })
+          goDetails: function (metricId) {
+            this.$router.push({ path: 'detail/' + metricId })
           },
-          renderNumber (funcId, dateCycle, warehouse, sysdate) {
+          renderNumber (metricId, dateCycle, warehouse, sysdate) {
             if (dateCycle !== undefined) {
-              axios.get(serverUrl + '/value/' + funcId + '/' + dateCycle + '?warehouse=' + warehouse + '&sysdate=' + sysdate)
+              let query = {metric: metricId, cycle: dateCycle, warehouse: warehouse, sysdate: sysdate}
+              let url = combineUrl(valueUrl, query)
+              axios.get(url)
                 .then(function (response) {
                   this.data = response.data
                 }.bind(this))
@@ -204,16 +226,20 @@ function initVue (components) {
                 })
             }
           },
-          renderChart (funcId, dateCycle, warehouse, sysdate) {
-            axios.get(serverUrl + '/chart/' + funcId + '/' + dateCycle + '?warehouse=' + warehouse + '&sysdate=' + sysdate)
+          renderChart (metricId, dateCycle, warehouse, sysdate) {
+            let query = {metric: metricId, cycle: dateCycle, warehouse: warehouse, sysdate: sysdate}
+            let url = combineUrl(chartUrl, query)
+            axios.get(url)
             .then(function (response) {
-              var data = response.data
-              axios.get(serverUrl + '/chartOption/' + funcId + '/' + dateCycle)
+              let data = response.data
+              let query2 = {metric: metricId, cycle: dateCycle}
+              let url2 = combineUrl(chartOptionUrl, query2)
+              axios.get(url2)
                 .then(function (response2) {
-                  var option = (function (res, optionstr) {
+                  let option = (function (res, optionstr) {
                     return eval('(' + optionstr + ')')
                   })(data, response2.data)
-                  drawChart(funcId + '-' + dateCycle, option)
+                  drawChart(metricId + '-' + dateCycle, option)
                 }).catch(function (error) {
                   console.log(error)
                 })
@@ -274,7 +300,6 @@ export default {
   }),
   methods: {
     getWarehouse () {
-      let warehouseUrl = serverUrl + '/dim/warehouse'
       axios.get(warehouseUrl)
         .then(function (res) {
           this.$store.commit('setWarehouse', res.data[0].id)
@@ -286,7 +311,6 @@ export default {
         })
     },
     getDateCycle () {
-      let dateCycleUrl = serverUrl + '/dim/datecycle'
       axios.get(dateCycleUrl)
         .then(function (res) {
           this.$store.commit('setDateCycle', res.data)
@@ -295,21 +319,20 @@ export default {
           console.log(err)
         })
     },
-    getFuncs () {
-      let funcUrl = serverUrl + '/func'
+    getMetrics () {
       let numberList = []
       let chartList = []
       let freeList = []
-      var that = this
-      axios.get(funcUrl)
+      let that = this
+      axios.get(metricUrl)
         .then(function (res) {
           res.data.forEach(function (item) {
             that.$store.commit('addMetrics', item)
-            if (item.funcType === 0) {
+            if (item.metricType === 0) {
               numberList.push(item)
-            } else if (item.funcType === 2) {
+            } else if (item.metricType === 2) {
               chartList.push(item)
-            } else if (item.funcType === 1) {
+            } else if (item.metricType === 1) {
               freeList.push(item)
             }
           })
@@ -323,13 +346,11 @@ export default {
         })
     },
     getModels () {
-      let modelUrl = serverUrl + '/models'
-      var that = this
       axios.get(modelUrl)
         .then(function (res) {
           initVue(res.data)
-          that.getFuncs()
-        })
+          this.getMetrics()
+        }.bind(this))
         .catch(function (err) {
           console.log(err)
         })
@@ -337,7 +358,7 @@ export default {
     submit () {
       this.username = this.username.toLowerCase()
       if (this.$refs.form.validate()) {
-        axios.post(serverUrl + '/user/login', {
+        axios.post(loginUrl, {
           username: this.username,
           password: this.password
         }).then(function (res) {
@@ -360,11 +381,11 @@ export default {
     }
   },
   mounted: function () {
-    var sysDate = '2017/10/31'
+    let sysDate = '2017/10/31'
     this.$store.commit('setDate', sysDate)
-    var sysWeek = getWeekOfYear(sysDate) + '(' + getWeekDuration(sysDate, 's') + '-' + getWeekDuration(sysDate, 'e') + ')'
+    let sysWeek = getWeekOfYear(sysDate) + '(' + getWeekDuration(sysDate, 's') + '-' + getWeekDuration(sysDate, 'e') + ')'
     this.$store.commit('setWeek', sysWeek)
-    var sysMonth = getMonthOfYear(sysDate) + '(' + getMonthDuration(sysDate, 's') + '-' + getMonthDuration(sysDate, 'e') + ')'
+    let sysMonth = getMonthOfYear(sysDate) + '(' + getMonthDuration(sysDate, 's') + '-' + getMonthDuration(sysDate, 'e') + ')'
     this.$store.commit('setMonth', sysMonth)
   }
 }

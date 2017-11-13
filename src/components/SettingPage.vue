@@ -2,11 +2,11 @@
   <v-container grid-list-sm text-xs-left pt-0>
     <v-card class="top-bar">
       <v-layout row wrap text-xs-center>
-        <v-flex xs2 style="font-size: 1.25em">
+        <v-flex xs2 topbar-left>
           <v-btn icon v-on:click="goBack">返回</v-btn>
         </v-flex>
-        <v-flex xs8>
-          <span style="font-size: 1.375em;">首页模块</span>
+        <v-flex xs8 topbar-center>
+          首页模块
         </v-flex>
         <v-flex xs2>
           <v-btn icon v-on:click="showHelp">
@@ -39,11 +39,11 @@
                 <template v-for="(metric, idx) in metrics">
                   <v-list-tile avatar>
                     <v-list-tile-action>
-                      <v-checkbox v-model="comp_value_option[metric.funcName]" :disabled="comp_value_option[metric.funcName]==-1" 
+                      <v-checkbox v-model="comp_value_option[metric.metricName]" :disabled="comp_value_option[metric.metricName]==-1" 
                       :true-value="1" :false-value="0" @change="toggleValueOption(metric)"></v-checkbox>
                     </v-list-tile-action>
                     <v-list-tile-content v-on:click="toggleValueOption(metric, true)">
-                      <v-list-tile-title>{{metric.funcName}}</v-list-tile-title>
+                      <v-list-tile-title>{{metric.metricName}}</v-list-tile-title>
                     </v-list-tile-content>
                   </v-list-tile>
                   <v-divider v-if="idx + 1 < metrics.length"></v-divider>
@@ -59,11 +59,11 @@
                 <template v-for="(metric, idx) in metrics">
                   <v-list-tile avatar>
                     <v-list-tile-action>
-                      <v-checkbox v-model="comp_chart_option[metric.funcName]" :disabled="comp_chart_option[metric.funcName]==-1" 
+                      <v-checkbox v-model="comp_chart_option[metric.metricName]" :disabled="comp_chart_option[metric.metricName]==-1" 
                       :true-value="1" :false-value="0" @change="toggleChartOption(metric)"></v-checkbox>
                     </v-list-tile-action>
                     <v-list-tile-content v-on:click="toggleChartOption(metric, true)">
-                      <v-list-tile-title>{{metric.funcName}}</v-list-tile-title>
+                      <v-list-tile-title>{{metric.metricName}}</v-list-tile-title>
                     </v-list-tile-content>
                   </v-list-tile>
                   <v-divider v-if="idx + 1 < metrics.length"></v-divider>
@@ -81,7 +81,7 @@
                   <div v-for="(metric, idx) in valueOptions">
                     <v-list-tile avatar>
                       <v-list-tile-content>
-                        <v-list-tile-title>{{metric.funcName}}</v-list-tile-title>
+                        <v-list-tile-title>{{metric.metricName}}</v-list-tile-title>
                       </v-list-tile-content>
                     </v-list-tile>
                     <v-divider></v-divider>
@@ -97,7 +97,7 @@
                   <div v-for="(metric, idx) in chartOptions">
                     <v-list-tile avatar>
                       <v-list-tile-content>
-                        <v-list-tile-title>{{metric.funcName}}</v-list-tile-title>
+                        <v-list-tile-title>{{metric.metricName}}</v-list-tile-title>
                       </v-list-tile-content>
                     </v-list-tile>
                     <v-divider></v-divider>
@@ -150,19 +150,35 @@ export default {
     },
     updateValueOption: function () {
       this.$store.commit('setHomepageValue', this.valueOptions)
+      var seq = 0
+      var that = this
+      this.valueOptions.forEach(function (item) {
+        var tmp = item
+        tmp.seq = seq
+        that.$store.commit('addMetrics', tmp)
+        seq += 1
+      })
     },
     updateChartOption: function () {
       this.$store.commit('setHomepageChart', this.chartOptions)
+      var seq = 0
+      var that = this
+      this.chartOptions.forEach(function (item) {
+        var tmp = item
+        tmp.seq = seq
+        that.$store.commit('addMetrics', tmp)
+        seq += 1
+      })
     },
     toggleValueOption: function (item, onClick) {
-      var name = item.funcName
+      var name = item.metricName
       if (onClick) {
         this.comp_value_option[name] = 1 - this.comp_value_option[name]
       }
       this.comp_chart_option[name] = 0 - this.comp_value_option[name]
       this.comp_value_option = JSON.parse(JSON.stringify(this.comp_value_option))
       var tmp = item
-      tmp.funcType = 1 + this.comp_chart_option[name]
+      tmp.metricType = 1 + this.comp_chart_option[name]
       this.$store.commit('addMetrics', tmp)
       var array = []
       var array2 = []
@@ -178,14 +194,14 @@ export default {
       this.$store.commit('setHomepageFree', array2)
     },
     toggleChartOption: function (item, onClick) {
-      var name = item.funcName
+      var name = item.metricName
       if (onClick) {
         this.comp_chart_option[name] = 1 - this.comp_chart_option[name]
       }
       this.comp_value_option[name] = 0 - this.comp_chart_option[name]
       this.comp_chart_option = JSON.parse(JSON.stringify(this.comp_chart_option))
       var tmp = item
-      tmp.funcType = 1 + this.comp_chart_option[name]
+      tmp.metricType = 1 + this.comp_chart_option[name]
       this.$store.commit('addMetrics', tmp)
       var array = []
       var array2 = []
@@ -203,11 +219,11 @@ export default {
   },
   created: function () {
     for (var key in this.$store.state.allMetrics) {
-      if (this.$store.state.allMetrics[key].funcType === 0) {
+      if (this.$store.state.allMetrics[key].metricType === 0) {
         this.comp_value_option[key] = 1
-      } else if (this.$store.state.allMetrics[key].funcType === 2) {
+      } else if (this.$store.state.allMetrics[key].metricType === 2) {
         this.comp_value_option[key] = -1
-      } else if (this.$store.state.allMetrics[key].funcType === 1) {
+      } else if (this.$store.state.allMetrics[key].metricType === 1) {
         this.comp_value_option[key] = 0
       }
       this.comp_chart_option[key] = 0 - this.comp_value_option[key]
@@ -215,21 +231,23 @@ export default {
     }
     this.comp_value_option = JSON.parse(JSON.stringify(this.comp_value_option))
     this.comp_chart_option = JSON.parse(JSON.stringify(this.comp_chart_option))
-    this.valueOptions = []
-    for (key in this.comp_value_option) {
-      if (this.comp_value_option[key] === 1) {
-        this.valueOptions.push(this.$store.state.allMetrics[key])
-      }
-    }
+    this.valueOptions = this.$store.state.homepageValues
+    this.chartOptions = this.$store.state.homepageCharts
+    // this.valueOptions = []
+    // for (key in this.comp_value_option) {
+    //   if (this.comp_value_option[key] === 1) {
+    //     this.valueOptions.push(this.$store.state.allMetrics[key])
+    //   }
+    // }
 
-    this.chartOptions = []
-    for (key in this.comp_chart_option) {
-      if (this.comp_chart_option[key] === 1) {
-        this.chartOptions.push(this.$store.state.allMetrics[key])
-      }
-    }
-    this.$store.commit('setHomepageValue', this.valueOptions)
-    this.$store.commit('setHomepageChart', this.chartOptions)
+    // this.chartOptions = []
+    // for (key in this.comp_chart_option) {
+    //   if (this.comp_chart_option[key] === 1) {
+    //     this.chartOptions.push(this.$store.state.allMetrics[key])
+    //   }
+    // }
+    // this.$store.commit('setHomepageValue', this.valueOptions)
+    // this.$store.commit('setHomepageChart', this.chartOptions)
   },
   mounted: function () {
   }

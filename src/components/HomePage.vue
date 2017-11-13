@@ -29,7 +29,7 @@
         </v-card>
       </v-flex>
       <v-flex xs3 v-for="(item, idx) in this.$store.state.homepageFree" :key="idx" @click="goDetails(item.id)">
-        <v-card style="font-size: .8em"> {{ item.funcName }} </v-card>
+        <v-card style="font-size: .8em"> {{ item.metricName }} </v-card>
       </v-flex>
     </v-layout>
   </v-container>
@@ -88,8 +88,8 @@ export default {
     goSettings: function () {
       this.$router.push({ path: 'settings' })
     },
-    goDetails: function (funcId) {
-      this.$router.push({ path: 'detail/' + funcId })
+    goDetails: function (metricId) {
+      this.$router.push({ path: 'detail/' + metricId })
     }
   },
   watch: {
