@@ -20,7 +20,7 @@
             <span>{{period}}</span>
           </v-flex>
           <v-flex xs2 text-xs-right style="padding-top: 15px; font-size: .625em">
-            <span style="font-weight: bold;">全部仓库</span>
+            <span style="font-weight: bold;">{{this.$store.state.warehouse.warehouseName}}</span>
           </v-flex>
         </v-layout>
       </v-flex>
@@ -275,7 +275,7 @@ export default {
     },
     renderNumber (metricId, dateCycle, warehouse, sysdate) {
       if (dateCycle !== undefined) {
-        let query = {metric: metricId, cycle: dateCycle, warehouse: warehouse, sysdate: sysdate}
+        let query = {metric: metricId, cycle: dateCycle, warehouse: warehouse.id, sysdate: sysdate}
         let url = combineUrl(valueUrl, query)
         axios.get(url)
           .then(function (response) {
@@ -287,7 +287,7 @@ export default {
       }
     },
     renderChart (metricId, dateCycle, warehouse, sysdate) {
-      let query = {metric: metricId, cycle: dateCycle, warehouse: warehouse, sysdate: sysdate}
+      let query = {metric: metricId, cycle: dateCycle, warehouse: warehouse.id, sysdate: sysdate}
       let url = combineUrl(chartUrl, query)
       axios.get(url)
       .then(function (response) {

@@ -334,4 +334,7 @@ table.table thead th {
 .topbar-center {
   font-size: 1.35em;
 }
+.application--light .table tbody tr:hover:not(.datatable__expand-row) {
+	background-color: #6E88AC;
+}
 </style>

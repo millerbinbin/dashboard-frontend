@@ -183,7 +183,7 @@ function initVue (components) {
           },
           renderNumber (metricId, dateCycle, warehouse, sysdate) {
             if (dateCycle !== undefined) {
-              let query = {metric: metricId, cycle: dateCycle, warehouse: warehouse, sysdate: sysdate}
+              let query = {metric: metricId, cycle: dateCycle, warehouse: warehouse.id, sysdate: sysdate}
               let url = combineUrl(valueUrl, query)
               axios.get(url)
                 .then(function (response) {
@@ -207,6 +207,7 @@ function initVue (components) {
           return {
             data: {},
             id: comp.id,
+            chartId: comp.id + '-day',
             sysDate: '',
             sysDateBefore: ''
           }
@@ -217,7 +218,7 @@ function initVue (components) {
           },
           renderNumber (metricId, dateCycle, warehouse, sysdate) {
             if (dateCycle !== undefined) {
-              let query = {metric: metricId, cycle: dateCycle, warehouse: warehouse, sysdate: sysdate}
+              let query = {metric: metricId, cycle: dateCycle, warehouse: warehouse.id, sysdate: sysdate}
               let url = combineUrl(valueUrl, query)
               axios.get(url)
                 .then(function (response) {
@@ -229,7 +230,7 @@ function initVue (components) {
             }
           },
           renderChart (metricId, dateCycle, warehouse, sysdate) {
-            let query = {metric: metricId, cycle: dateCycle, warehouse: warehouse, sysdate: sysdate}
+            let query = {metric: metricId, cycle: dateCycle, warehouse: warehouse.id, sysdate: sysdate}
             let url = combineUrl(chartUrl, query)
             axios.get(url)
             .then(function (response) {
@@ -304,7 +305,7 @@ export default {
     getWarehouse () {
       axios.get(warehouseUrl)
         .then(function (res) {
-          this.$store.commit('setWarehouse', res.data[0].id)
+          this.$store.commit('setWarehouse', res.data[0])
           this.$store.commit('setWarehouseList', res.data)
           this.getModels()
         }.bind(this))

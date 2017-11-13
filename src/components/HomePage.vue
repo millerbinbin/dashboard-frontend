@@ -94,7 +94,7 @@ export default {
   },
   watch: {
     warehouse: function (val) {
-      this.$store.commit('setWarehouse', val.id)
+      this.$store.commit('setWarehouse', val)
       this.showComp = false
       this.$nextTick(function () {
         this.showComp = true
@@ -114,7 +114,7 @@ export default {
     this.sysDate = this.$store.state.sysDate
     this.sysUser = this.$store.state.sysUser
     this.warehouseList = this.$store.state.warehouseList
-    this.warehouse = this.warehouseList[0]
+    this.warehouse = this.$store.state.warehouse
   }
 }
 </script>
