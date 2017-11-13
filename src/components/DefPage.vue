@@ -38,8 +38,8 @@
 <script>
 import Vue from 'vue'
 import axios from 'axios'
-let serverUrl = 'http://localhost:8080/dashboard-web/api'
-let descUrl = serverUrl + '/desc'
+let serverUrl = '/api'
+let descUrl = serverUrl + '/def'
 export default {
   data: function () {
     return {

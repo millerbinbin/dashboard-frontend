@@ -37,7 +37,7 @@
               <v-list one-line>
                 <v-divider></v-divider>
                 <template v-for="(metric, idx) in metrics">
-                  <v-list-tile avatar>
+                  <v-list-tile avatar :key="metric.id">
                     <v-list-tile-action>
                       <v-checkbox v-model="comp_value_option[metric.metricName]" :disabled="comp_value_option[metric.metricName]==-1" 
                       :true-value="1" :false-value="0" @change="toggleValueOption(metric)"></v-checkbox>
@@ -46,7 +46,7 @@
                       <v-list-tile-title>{{metric.metricName}}</v-list-tile-title>
                     </v-list-tile-content>
                   </v-list-tile>
-                  <v-divider v-if="idx + 1 < metrics.length"></v-divider>
+                  <v-divider v-if="idx + 1 < metrics.length" :key="metric.id"></v-divider>
                 </template>
               </v-list>
             </v-card>
@@ -57,7 +57,7 @@
               <v-list one-line>
                 <v-divider></v-divider>
                 <template v-for="(metric, idx) in metrics">
-                  <v-list-tile avatar>
+                  <v-list-tile avatar :key="metric.id">
                     <v-list-tile-action>
                       <v-checkbox v-model="comp_chart_option[metric.metricName]" :disabled="comp_chart_option[metric.metricName]==-1" 
                       :true-value="1" :false-value="0" @change="toggleChartOption(metric)"></v-checkbox>
@@ -66,7 +66,7 @@
                       <v-list-tile-title>{{metric.metricName}}</v-list-tile-title>
                     </v-list-tile-content>
                   </v-list-tile>
-                  <v-divider v-if="idx + 1 < metrics.length"></v-divider>
+                  <v-divider v-if="idx + 1 < metrics.length" :key="metric.id"></v-divider>
                 </template>
               </v-list>
             </v-card>
@@ -78,7 +78,7 @@
                 <v-subheader>数据框</v-subheader>
                 <v-divider></v-divider>
                 <draggable v-model="valueOptions" :options="{group:'value', animation: 150}" @end="updateValueOption">
-                  <div v-for="(metric, idx) in valueOptions">
+                  <div v-for="(metric, idx) in valueOptions" :key="metric.id">
                     <v-list-tile avatar>
                       <v-list-tile-content>
                         <v-list-tile-title>{{metric.metricName}}</v-list-tile-title>
@@ -94,7 +94,7 @@
                 <v-subheader>趋势图</v-subheader>
                 <v-divider></v-divider>
                 <draggable v-model="chartOptions" :options="{group:'chart', animation: 150}" @end="updateChartOption">
-                  <div v-for="(metric, idx) in chartOptions">
+                  <div v-for="(metric, idx) in chartOptions" :key="metric.id">
                     <v-list-tile avatar>
                       <v-list-tile-content>
                         <v-list-tile-title>{{metric.metricName}}</v-list-tile-title>
@@ -112,11 +112,14 @@
       </v-tabs>
     </main>
     <v-layout row wrap text-xs-center>
-              <v-flex xs4 offset-xs4 v-on:click="goDesc">
-                <i class="material-icons md-16 yellow100" >info</i><span>数据定义</span>
-              </v-flex>
-              <v-flex xs2 offset-xs10 style="font-size: .625em" v-on:click="goLogin">退出登录</v-flex>
-            </v-layout>
+      <v-flex xs4 offset-xs4 v-on:click="goDef">
+        <v-layout row wrap>
+          <v-flex xs2 offset-xs2><i class="material-icons md-16 yellow100" >info</i></v-flex>
+          <v-flex xs7 text-xs-left style="font-size: .875em">数据定义</v-flex>
+        </v-layout>
+      </v-flex>
+      <v-flex xs2 offset-xs10 style="font-size: .625em" v-on:click="goLogin">退出登录</v-flex>
+    </v-layout>
   </v-container>
 </template>
 
@@ -136,8 +139,8 @@ export default {
     }
   },
   methods: {
-    goDesc: function () {
-      this.$router.push({path: 'desc'})
+    goDef: function () {
+      this.$router.push({path: 'def'})
     },
     goBack: function () {
       this.$router.go(-1)

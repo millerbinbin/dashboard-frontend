@@ -31,7 +31,8 @@
 <script>
 import Vue from 'vue'
 import axios from 'axios'
-let serverUrl = 'http://localhost:8080/dashboard-web/api'
+// let serverUrl = 'http://localhost:8080/dashboard-web/api'
+let serverUrl = '/api'
 let valueUrl = serverUrl + '/value'
 let chartUrl = serverUrl + '/chart'
 let chartOptionUrl = serverUrl + '/chartOption'
@@ -40,7 +41,6 @@ let dateCycleUrl = serverUrl + '/dim/datecycle'
 let loginUrl = serverUrl + '/user/login'
 let metricUrl = serverUrl + '/metric'
 let modelUrl = serverUrl + '/models'
-
 let echarts = require('echarts')
 
 function combineUrl (url, query) {
@@ -173,7 +173,8 @@ function initVue (components) {
         template: comp.numberTemplate,
         data: function () {
           return {
-            data: {}
+            data: {},
+            id: comp.id
           }
         },
         methods: {
@@ -205,6 +206,7 @@ function initVue (components) {
         data: function () {
           return {
             data: {},
+            id: comp.id,
             sysDate: '',
             sysDateBefore: ''
           }

@@ -29,9 +29,9 @@
       <v-flex xs12 chart-detail-header>
         <v-card>
           <v-layout row wrap>
-             <v-flex xs5>
+             <v-flex xs4>
               <v-layout row wrap>
-                <v-flex xs6 chart-detail-func-name-tag>{{data.value.f1}}</v-flex>
+                <v-flex xs8 chart-detail-func-name-tag>{{data.value.f1}}</v-flex>
                 <v-flex xs2 text-xs-right>
                   <v-tooltip right>
                     <i class="material-icons md-16 yellow100" slot="activator">info</i>
@@ -42,15 +42,15 @@
                 <v-flex xs8><div class="under-bar"></div></v-flex>
               </v-layout>
             </v-flex>
-            <v-flex xs4 chart-detail-idx-name text-xs-center>
+            <v-flex xs5 chart-detail-idx-name>
               <v-layout row wrap style="padding-bottom: 10px">
                 <v-flex xs5>
                   <span>{{data.value.f4}}</span>    
                 </v-flex>
-                <v-flex xs5 chart-detail-idx-value>
+                <v-flex xs4 chart-detail-idx-value>
                   {{data.value.v4}}   
                 </v-flex>
-                <v-flex xs2 text-xs-left>
+                <v-flex xs3 text-xs-left>
                   <div v-if="data.value.v2 > 0" class="trending-up"></div>
                   <div v-else-if="data.value.v2 == 0" class="trending-flat"></div>
                   <div v-else-if="data.value.v2 < 0" class="trending-down"></div></span>
@@ -60,10 +60,10 @@
                 <v-flex xs5>
                   {{data.value.f5}}  
                 </v-flex>
-                <v-flex xs5 chart-detail-idx-value>
+                <v-flex xs4 chart-detail-idx-value>
                   {{data.value.v5}}
                 </v-flex>
-                <v-flex xs2 text-xs-left>
+                <v-flex xs3 text-xs-left>
                   <div v-if="data.value.v3 > 0" class="trending-up"></div>
                   <div v-else-if="data.value.v3 == 0" class="trending-flat"></div>
                   <div v-else-if="data.value.v3 < 0" class="trending-down"></div></span>
@@ -72,7 +72,7 @@
             </v-flex>
             <v-flex xs3 chart-detail-idx-name>
               <v-layout row wrap style="padding-bottom: 10px">
-                <v-flex xs5 offset-xs1>
+                <v-flex xs6>
                   {{data.value.f2}}    
                 </v-flex>
                 <v-flex xs4 chart-detail-idx-value>
@@ -85,7 +85,7 @@
                 </v-flex>
               </v-layout>
               <v-layout row wrap>
-                <v-flex xs5 offset-xs1>
+                <v-flex xs6>
                   {{data.value.f3}}    
                 </v-flex>
                 <v-flex xs4 chart-detail-idx-value>
@@ -148,7 +148,8 @@
 <script>
 import axios from 'axios'
 var echarts = require('echarts')
-let serverUrl = 'http://localhost:8080/dashboard-web/api'
+// let serverUrl = 'http://localhost:8080/dashboard-web/api'
+let serverUrl = '/api'
 let valueUrl = serverUrl + '/value'
 let chartUrl = serverUrl + '/chart'
 let chartOptionUrl = serverUrl + '/chartOption'

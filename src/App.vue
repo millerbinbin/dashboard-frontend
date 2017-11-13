@@ -13,6 +13,7 @@ export default {
 </script>
 
 <style>
+
 .application {
   padding-top: 8px;
   background-color: #222e3e !important;
@@ -20,6 +21,15 @@ export default {
   font-size: 16px;
 }
 
+@media screen and (max-width: 350px) {
+  .application {
+    font-size: 14px;
+  }
+
+  .input-group--select .input-group__selections__comma {
+    font-size: 14px;
+  }
+}
 .container {
   color: #fff !important;
 }
@@ -278,21 +288,21 @@ table.table thead th {
 }
 
 .trending-down {
-  background: url(assets/down.png) no-repeat;
+  background: url(img/down.png) no-repeat;
   width: 16px;
   height: 16px;
   display: inline-block;
   margin-top: 2px;
 }
 .trending-up {
-  background: url(assets/up.png) no-repeat;
+  background: url(img/up.png) no-repeat;
   width: 16px;
   height: 16px;
   display: inline-block;
   margin-top: 2px;
 }
 .trending-flat {
-  background: url(assets/flat.png) no-repeat;
+  background: url(img/flat.png) no-repeat;
   width: 16px;
   height: 16px;
   display: inline-block;
