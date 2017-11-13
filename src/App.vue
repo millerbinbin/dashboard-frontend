@@ -13,7 +13,9 @@ export default {
 </script>
 
 <style>
-
+body {
+  background-color: #222e3e !important;
+}
 .application {
   padding-top: 8px;
   background-color: #222e3e !important;
@@ -335,6 +337,10 @@ table.table thead th {
   font-size: 1.35em;
 }
 .application--light .table tbody tr:hover:not(.datatable__expand-row) {
-	background-color: #6E88AC;
+  background-color: #6e88ac;
+}
+.chart-body {
+  width: 100%!important;
+  height: 180px!important;
 }
 </style>

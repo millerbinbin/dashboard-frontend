@@ -110,9 +110,9 @@
                 <v-flex xs8 offset-xs2>
                   <v-layout row wrap>
                     <v-flex xs1 offset-xs2 cyan-bar></v-flex>
-                    <v-flex xs3 chart-idx-name>{{sysDate}}</v-flex>
+                    <v-flex xs3 chart-idx-value>{{sysDate}}</v-flex>
                     <v-flex xs1 offset-xs1 grey-bar></v-flex>
-                    <v-flex xs3 chart-idx-name>{{sysDateBefore}}</v-flex>
+                    <v-flex xs3 chart-idx-value>{{sysDateBefore}}</v-flex>
                   </v-layout>
                 </v-flex>
               </v-layout>

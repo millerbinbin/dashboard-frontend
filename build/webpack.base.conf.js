@@ -10,7 +10,8 @@ function resolve (dir) {
 
 module.exports = {
   entry: {
-    app: './src/main.js'
+    app: './src/main.js',
+    vendors: ['vue', 'vuex', 'vue-router', 'vuetify', 'echarts', 'vuedraggable', 'axios']
   },
   output: {
     path: config.build.assetsRoot,
