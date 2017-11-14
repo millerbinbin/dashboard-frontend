@@ -1,5 +1,5 @@
 <template>
-  <v-container grid-list-sm text-xs-center>
+  <v-container grid-list-xs text-xs-center>
     <v-layout row wrap>
       <v-flex xs6 offset-xs3>
         <v-avatar class="grey lighten-4 logo">
@@ -264,7 +264,7 @@ function initVue (components) {
   }
   Vue.component('dummy-bar', {
     name: 'dummy-bar',
-    template: '<v-flex xs6 text-xs-center circle-bar><v-card><v-icon class="md-48 grey100" @click="goSettings">add_circle</v-icon></v-card></v-flex>',
+    template: '<v-flex xs6><v-card class="number-box circle-bar"><v-icon class="md-48 grey100" @click="goSettings">add_circle</v-icon></v-card></v-flex>',
     data: function () {
       return {
         data: {}

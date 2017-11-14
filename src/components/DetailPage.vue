@@ -1,127 +1,123 @@
 <template>
-  <v-container grid-list-sm text-xs-left pt-0 v-if="data.value">
-    <v-card class="top-bar">
+  <v-container grid-list-xs text-xs-left v-if="data.value">
+    <v-toolbar fixed>
       <v-layout row wrap text-xs-center>
-        <v-flex xs2 topbar-left>
+        <v-flex xs1 topbar-left>
           <v-btn icon v-on:click="goBack">返回</v-btn>
         </v-flex>
-        <v-flex xs6 offset-xs1 topbar-center>
+        <v-flex xs6 offset-xs2 topbar-center>
           {{data.value.f1}}
         </v-flex>
       </v-layout>
-    </v-card>
-    <v-layout row wrap>
+    </v-toolbar>
+
+    <v-layout row wrap style="padding-top: 40px; margin-left: 3px !important; margin-right: 3px !important;">
       <v-flex xs12>
         <v-layout row wrap text-xs-left>
-          <v-flex xs3 filter>
+          <v-flex xs2 filter>
             <v-select v-bind:items="dateCycleList" v-model="a1" item-text="dateCycle" single-line bottom ></v-select>
           </v-flex>
-          <v-flex xs7 style="padding-top: 15px; padding-left: 5px; font-size: .625em">
+          <v-flex xs8 detail-info>
             <span>{{period}}</span>
           </v-flex>
-          <v-flex xs2 text-xs-right style="padding-top: 15px; font-size: .625em">
+          <v-flex xs2 text-xs-right detail-info>
             <span style="font-weight: bold;">{{this.$store.state.warehouse.warehouseName}}</span>
           </v-flex>
         </v-layout>
       </v-flex>
     </v-layout>
-    <v-layout row wrap>
-      <v-flex xs12 chart-detail-header>
-        <v-card>
-          <v-layout row wrap>
-             <v-flex xs4>
-              <v-layout row wrap>
-                <v-flex xs8 chart-detail-func-name-tag>{{data.value.f1}}</v-flex>
-                <v-flex xs2 text-xs-right>
-                  <v-tooltip right>
-                    <i class="material-icons md-16 yellow100" slot="activator">info</i>
-                    <span>{{tip}}</span>
-                  </v-tooltip>
-                </v-flex>
-                <v-flex xs12 chart-detail-func-value-tag>{{data.value.v1}}</v-flex>
-                <v-flex xs8><div class="under-bar"></div></v-flex>
-              </v-layout>
-            </v-flex>
-            <v-flex xs5 chart-detail-idx-name>
-              <v-layout row wrap style="padding-bottom: 10px">
-                <v-flex xs5>
-                  <span>{{data.value.f4}}</span>    
-                </v-flex>
-                <v-flex xs4 chart-detail-idx-value>
-                  {{data.value.v4}}   
-                </v-flex>
-                <v-flex xs3 text-xs-left>
-                  <div v-if="data.value.v2 > 0" class="trending-up"></div>
-                  <div v-else-if="data.value.v2 == 0" class="trending-flat"></div>
-                  <div v-else-if="data.value.v2 < 0" class="trending-down"></div></span>
-                </v-flex>
-              </v-layout>
-              <v-layout row wrap>
-                <v-flex xs5>
-                  {{data.value.f5}}  
-                </v-flex>
-                <v-flex xs4 chart-detail-idx-value>
-                  {{data.value.v5}}
-                </v-flex>
-                <v-flex xs3 text-xs-left>
-                  <div v-if="data.value.v3 > 0" class="trending-up"></div>
-                  <div v-else-if="data.value.v3 == 0" class="trending-flat"></div>
-                  <div v-else-if="data.value.v3 < 0" class="trending-down"></div></span>
-                </v-flex>
-              </v-layout>
-            </v-flex>
-            <v-flex xs3 chart-detail-idx-name>
-              <v-layout row wrap style="padding-bottom: 10px">
-                <v-flex xs6>
-                  {{data.value.f2}}    
-                </v-flex>
-                <v-flex xs4 chart-detail-idx-value>
-                  {{data.value.v2}}%
-                </v-flex>
-                <v-flex xs2 text-xs-left>
-                  <div v-if="data.value.v2 > 0" class="trending-up"></div>
-                  <div v-else-if="data.value.v2 == 0" class="trending-flat"></div>
-                  <div v-else-if="data.value.v2 < 0" class="trending-down"></div></span>
-                </v-flex>
-              </v-layout>
-              <v-layout row wrap>
-                <v-flex xs6>
-                  {{data.value.f3}}    
-                </v-flex>
-                <v-flex xs4 chart-detail-idx-value>
-                  {{data.value.v3}}%
-                </v-flex>
-                <v-flex xs2 text-xs-left>
-                  <div v-if="data.value.v3 > 0" class="trending-up"></div>
-                  <div v-else-if="data.value.v3 == 0" class="trending-flat"></div>
-                  <div v-else-if="data.value.v3 < 0" class="trending-down"></div></span>
-                </v-flex>
-              </v-layout>
-            </v-flex>
-          </v-layout>
-        </v-card>
+    <v-card class="chart">
+      <v-card class="chart-detail-header">
         <v-layout row wrap>
-          <v-flex xs12 chart-detail>
-            <v-card>
-              <div :id="chartId" style="width:100%;height:180px"></div>
-            </v-card>
-            <v-card style="height: 30px!important">
-              <v-layout row wrap>
-                <v-flex xs8 offset-xs2>
-                  <v-layout row wrap>
-                    <v-flex xs1 offset-xs2 cyan-bar></v-flex>
-                    <v-flex xs3 chart-idx-value>{{sysDate}}</v-flex>
-                    <v-flex xs1 offset-xs1 grey-bar></v-flex>
-                    <v-flex xs3 chart-idx-value>{{sysDateBefore}}</v-flex>
-                  </v-layout>
-                </v-flex>
-              </v-layout>
-            </v-card> 
+            <v-flex xs4>
+            <v-layout row wrap>
+              <v-flex xs8 chart-detail-func-name>{{data.value.f1}}</v-flex>
+              <v-flex xs2 text-xs-right>
+                <v-tooltip right>
+                  <i class="material-icons md-16 yellow100" slot="activator">info</i>
+                  <span>{{tip}}</span>
+                </v-tooltip>
+              </v-flex>
+              <v-flex xs12 chart-detail-func-value>{{data.value.v1}}</v-flex>
+              <v-flex xs9><div class="under-bar"></div></v-flex>
+            </v-layout>
+          </v-flex>
+          <v-flex xs5>
+            <v-layout row wrap style="padding-bottom: 6px; padding-top: 3px">
+              <v-flex xs5 chart-detail-idx-name>
+                <span>{{data.value.f4}}</span>    
+              </v-flex>
+              <v-flex xs4 chart-detail-idx-value>
+                {{data.value.v4}}   
+              </v-flex>
+              <v-flex xs3 text-xs-left>
+                <div v-if="data.value.v2 > 0" class="trending-up"></div>
+                <div v-else-if="data.value.v2 == 0" class="trending-flat"></div>
+                <div v-else-if="data.value.v2 < 0" class="trending-down"></div></span>
+              </v-flex>
+            </v-layout>
+            <v-layout row wrap>
+              <v-flex xs5 chart-detail-idx-name>
+                {{data.value.f5}}  
+              </v-flex>
+              <v-flex xs4 chart-detail-idx-value>
+                {{data.value.v5}}
+              </v-flex>
+              <v-flex xs3 text-xs-left>
+                <div v-if="data.value.v3 > 0" class="trending-up"></div>
+                <div v-else-if="data.value.v3 == 0" class="trending-flat"></div>
+                <div v-else-if="data.value.v3 < 0" class="trending-down"></div></span>
+              </v-flex>
+            </v-layout>
+          </v-flex>
+          <v-flex xs3>
+            <v-layout row wrap style="padding-bottom: 6px; padding-top: 3px">
+              <v-flex xs5 chart-detail-idx-name>
+                {{data.value.f2}}    
+              </v-flex>
+              <v-flex xs5 chart-detail-idx-value>
+                {{data.value.v2}}%
+              </v-flex>
+              <v-flex xs2 text-xs-left>
+                <div v-if="data.value.v2 > 0" class="trending-up"></div>
+                <div v-else-if="data.value.v2 == 0" class="trending-flat"></div>
+                <div v-else-if="data.value.v2 < 0" class="trending-down"></div></span>
+              </v-flex>
+            </v-layout>
+            <v-layout row wrap>
+              <v-flex xs5 chart-detail-idx-name>
+                {{data.value.f3}}    
+              </v-flex>
+              <v-flex xs5 chart-detail-idx-value>
+                {{data.value.v3}}%
+              </v-flex>
+              <v-flex xs2 text-xs-left>
+                <div v-if="data.value.v3 > 0" class="trending-up"></div>
+                <div v-else-if="data.value.v3 == 0" class="trending-flat"></div>
+                <div v-else-if="data.value.v3 < 0" class="trending-down"></div></span>
+              </v-flex>
+            </v-layout>
           </v-flex>
         </v-layout>
-      </v-flex>
-      <v-flex xs12>
-        <v-data-table v-bind:headers="headers" :items="items" hide-actions item-key="name">
+      </v-card>
+      <v-card class="chart-detail-body">
+        <div :id="chartId" style="width:100%;height:180px"></div>
+      </v-card>
+      <v-card class="chart-detail-foot">
+        <v-layout row wrap>
+          <v-flex xs8 offset-xs2>
+            <v-layout row wrap>
+              <v-flex xs1 offset-xs2 cyan-bar></v-flex>
+              <v-flex xs3 chart-legend>{{sysDate}}</v-flex>
+              <v-flex xs1 offset-xs1 grey-bar></v-flex>
+              <v-flex xs3 chart-legend>{{sysDateBefore}}</v-flex>
+            </v-layout>
+          </v-flex>
+        </v-layout>
+      </v-card>
+    </v-card>
+    <v-card class="chart-detail-table">
+      <v-data-table v-bind:headers="headers" :items="items" hide-actions item-key="name">
         <template slot="items" slot-scope="props">
           <tr v-if="props.item.value==true || expand=='remove'">
             <td>
@@ -140,8 +136,7 @@
           </tr>
         </template>
       </v-data-table>
-      </v-flex>
-    </v-layout>
+    </v-card>
   </v-container>
 </template>
 

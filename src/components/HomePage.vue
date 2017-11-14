@@ -1,35 +1,29 @@
 <template>
-  <v-container grid-list-sm text-xs-left pt-0>
-    <v-layout row wrap>
-      <v-flex xs12>
-        <v-card class="top-bar" fixed>
-          <v-layout row wrap text-xs-center>
-            <v-flex xs4 offset-xs4 filter>
-              <v-select v-bind:items="warehouseList" v-model="warehouse" item-text="warehouseName" single-line bottom></v-select>
-            </v-flex>
-            <v-flex xs2 offset-xs2>
-              <v-btn icon v-on:click="goSettings">
-                <i class="material-icons md-24 grey100">settings</i>
-              </v-btn>
-            </v-flex>
-          </v-layout>
-        </v-card>
-      </v-flex>
-    </v-layout>
-    <v-layout row wrap>
+  <v-container grid-list-xs text-xs-left pt-0>
+    <v-toolbar fixed>
+      <v-layout row wrap text-xs-center>
+        <v-flex xs5 offset-xs4 filter style="font-size: 10px" text-xs-right>
+          <v-select v-bind:items="warehouseList" v-model="warehouse" item-text="warehouseName" single-line bottom style="width: 90%"></v-select>
+        </v-flex>
+        <v-flex xs1 offset-xs2>
+          <v-btn icon v-on:click="goSettings">
+            <i class="material-icons md-24 grey100">settings</i>
+          </v-btn>
+        </v-flex>
+      </v-layout>
+    </v-toolbar>
+    <v-layout row wrap style="padding-top: 50px; margin-left: 3px; margin-right: 3px">
       <v-flex xs6 user-tag>{{ this.sysUser }}</v-flex>
       <v-flex xs6 date-tag>数据日期：{{ this.sysDate }}</v-flex>
     </v-layout>
     <number-view v-if="showComp"></number-view>
     <chart-view v-if="showComp"></chart-view>
-    <v-layout row wrap text-xs-center v-if="this.$store.state.homepageFree.length > 0">
-      <v-flex xs12 circle-bar>
-        <v-card>
-          <i class="material-icons md-32 grey100" v-on:click="goSettings">add_circle</i>
-        </v-card>
-      </v-flex>
-      <v-flex xs3 v-for="(item, idx) in this.$store.state.homepageFree" :key="idx" @click="goDetails(item.id)">
-        <v-card style="font-size: .8em"> {{ item.metricName }} </v-card>
+    <v-card class="circle-bar" v-if="this.$store.state.homepageFree.length > 0">
+      <i class="material-icons md-32 grey100" v-on:click="goSettings">add_circle</i>
+    </v-card>
+    <v-layout row wrap text-xs-center pt-2>
+      <v-flex pa-2 xs4 v-for="(item, idx) in this.$store.state.homepageFree" :key="idx" @click="goDetails(item.id)">
+        <v-card> {{ item.metricName }} </v-card>
       </v-flex>
     </v-layout>
   </v-container>
