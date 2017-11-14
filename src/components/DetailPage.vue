@@ -1,6 +1,6 @@
 <template>
   <v-container grid-list-sm text-xs-left pt-0 v-if="data.value">
-    <v-card class="top-bar">
+    <v-toolbar fixed>
       <v-layout row wrap text-xs-center>
         <v-flex xs2 topbar-left>
           <v-btn icon v-on:click="goBack">返回</v-btn>
@@ -9,25 +9,25 @@
           {{data.value.f1}}
         </v-flex>
       </v-layout>
-    </v-card>
-    <v-layout row wrap>
+    </v-toolbar>
+    <v-layout row wrap style="padding-top: 40px">
       <v-flex xs12>
         <v-layout row wrap text-xs-left>
-          <v-flex xs3 filter>
+          <v-flex xs2 filter>
             <v-select v-bind:items="dateCycleList" v-model="a1" item-text="dateCycle" single-line bottom ></v-select>
           </v-flex>
-          <v-flex xs7 style="padding-top: 15px; padding-left: 5px; font-size: .625em">
+          <v-flex xs8 style="padding-top: 15px; padding-left: 5px; font-size: .75em">
             <span>{{period}}</span>
           </v-flex>
-          <v-flex xs2 text-xs-right style="padding-top: 15px; font-size: .625em">
+          <v-flex xs2 text-xs-right style="padding-top: 15px; font-size: .75em">
             <span style="font-weight: bold;">{{this.$store.state.warehouse.warehouseName}}</span>
           </v-flex>
         </v-layout>
       </v-flex>
     </v-layout>
     <v-layout row wrap>
-      <v-flex xs12 chart-detail-header>
-        <v-card>
+      <v-flex xs12 >
+        <v-card chart-detail-header>
           <v-layout row wrap>
              <v-flex xs4>
               <v-layout row wrap>
@@ -110,9 +110,9 @@
                 <v-flex xs8 offset-xs2>
                   <v-layout row wrap>
                     <v-flex xs1 offset-xs2 cyan-bar></v-flex>
-                    <v-flex xs3 chart-idx-value>{{sysDate}}</v-flex>
+                    <v-flex xs3 chart-legend>{{sysDate}}</v-flex>
                     <v-flex xs1 offset-xs1 grey-bar></v-flex>
-                    <v-flex xs3 chart-idx-value>{{sysDateBefore}}</v-flex>
+                    <v-flex xs3 chart-legend>{{sysDateBefore}}</v-flex>
                   </v-layout>
                 </v-flex>
               </v-layout>

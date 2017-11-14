@@ -1,6 +1,6 @@
 <template>
   <v-container grid-list-sm text-xs-left pt-0>
-    <v-card class="top-bar">
+    <v-toolbar fixed>
       <v-layout row wrap text-xs-center>
         <v-flex xs2 topbar-left>
           <v-btn icon v-on:click="goBack">返回</v-btn>
@@ -8,14 +8,19 @@
         <v-flex xs8 topbar-center>
           首页模块
         </v-flex>
-        <v-flex xs2>
+        <v-flex xs2 topbar-right>
           <v-btn icon v-on:click="showHelp">
             <i class="material-icons md-24 grey100">help</i>
           </v-btn>
         </v-flex>
       </v-layout>
-    </v-card>
-    <main>
+    </v-toolbar>
+    <main style="padding-top: 50px">
+      <v-layout row wrap text-xs-center>
+        <v-flex xs8 offset-xs2 def>
+          你可以设计自己专属的DashBoard在下方添加并拖动整理您关心的数据
+        </v-flex>
+      </v-layout>
       <v-tabs dark fixed centered>
         <v-tabs-bar>
           <v-tabs-slider></v-tabs-slider>
@@ -115,10 +120,10 @@
       <v-flex xs4 offset-xs4 v-on:click="goDef">
         <v-layout row wrap>
           <v-flex xs2 offset-xs2><i class="material-icons md-16 yellow100" >info</i></v-flex>
-          <v-flex xs7 text-xs-left style="font-size: .875em">数据定义</v-flex>
+          <v-flex xs7 text-xs-left def>数据定义</v-flex>
         </v-layout>
       </v-flex>
-      <v-flex xs2 offset-xs10 style="font-size: .625em" v-on:click="goLogin">退出登录</v-flex>
+      <v-flex xs2 offset-xs10 logout v-on:click="goLogin">退出登录</v-flex>
     </v-layout>
   </v-container>
 </template>

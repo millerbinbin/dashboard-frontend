@@ -20,16 +20,15 @@ body {
   padding-top: 8px;
   background-color: #222e3e !important;
   color: #ffffff !important;
-  font-size: 16px;
+  font-size: 15px;
 }
-
 @media screen and (max-width: 350px) {
   .application {
-    font-size: 14px;
+    font-size: 13.5px;
   }
 
   .input-group--select .input-group__selections__comma {
-    font-size: 14px;
+    font-size: 13.5px;
   }
 }
 .container {
@@ -110,13 +109,13 @@ body {
 .flex .grey-bar {
   background-color: #6e88ac;
   height: 10px;
-  margin-top: 4px;
+  margin-top: 6px;
 }
 
 .flex .cyan-bar {
   background-color: #00d7fb;
   height: 10px;
-  margin-top: 4px;
+  margin-top: 6px;
 }
 
 .card {
@@ -148,12 +147,12 @@ body {
 
 .flex .box-idx-name,
 .chart-idx-name {
-  font-size: 0.5em;
+  font-size: 0.7em;
 }
 
 .box-idx-value,
 .chart-idx-value {
-  font-size: 0.75em;
+  font-size: 0.9em;
   font-weight: bold;
 }
 
@@ -192,13 +191,13 @@ body {
 }
 
 .user-tag {
-  font-size: 0.625em !important;
+  font-size: 0.875em !important;
   padding-top: 2px;
   padding-left: 5px;
 }
 
 .date-tag {
-  font-size: 0.625em;
+  font-size: 0.875em;
   padding-top: 2px;
   padding-right: 5px;
   text-align: right;
@@ -210,7 +209,7 @@ body {
 }
 
 .chart-detail-idx-value {
-  font-size: 1em;
+  font-size: 1.25em;
   color: #fff;
   padding-left: 10px;
   padding-bottom: 10px !important;
@@ -232,8 +231,6 @@ body {
 
 .btn {
   color: #fff !important;
-  font-size: 0.875em;
-  font-weight: bold;
   margin: 0px;
 }
 
@@ -331,10 +328,25 @@ table.table thead th {
   color: #fff;
 }
 .topbar-left {
-  font-size: 1.25em;
+  font-size: 1em;
+  text-align: left;
 }
 .topbar-center {
-  font-size: 1.35em;
+  padding-top: 8px !important;
+  font-size: 1em;
+  text-align: center;
+}
+.topbar-right {
+  font-size: 1em;
+  text-align: right;
+}
+.def {
+  font-size: .875em;
+  color: #6e88ac;
+}
+.logout {
+  font-size: .625em;
+  color: #6e88ac;
 }
 .application--light .table tbody tr:hover:not(.datatable__expand-row) {
   background-color: #6e88ac;
@@ -342,5 +354,9 @@ table.table thead th {
 .chart-body {
   width: 100%!important;
   height: 180px!important;
+}
+.chart-legend {
+  color: #6e88ac;
+  font-size: .75em;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <v-container grid-list-sm text-xs-center>
-    <v-card class="top-bar">
+    <v-toolbar fixed>
       <v-layout row wrap text-xs-center>
         <v-flex xs2 topbar-left>
           <v-btn icon v-on:click="goBack">返回</v-btn>
@@ -9,10 +9,10 @@
           数据定义
         </v-flex>
       </v-layout>
-    </v-card>
+    </v-toolbar>
     <v-card flat v-for="(d, idx) in desc" :key="d.name">
       <v-list one-line subheader>
-        <v-subheader><b>{{ d.name }}</b></v-subheader>
+        <v-subheader>{{ d.name }}</v-subheader>
         <v-list-tile avatar>
           <v-list-tile-content>
             <v-list-tile-title>日维度：{{ d.day }}</v-list-tile-title>
