@@ -120,7 +120,7 @@
       <v-data-table v-bind:headers="headers" :items="items" hide-actions item-key="name">
         <template slot="items" slot-scope="props">
           <tr v-if="props.item.value || expand==='remove'">
-            <td class="text-xs-left" style="width: 36px">
+            <td class="text-xs-center" style="width: 36px">
               <i v-if="props.item.value" class="material-icons md-8 yellow100" v-on:click="if (expand==='remove') expand='add'; else expand='remove'">
                 {{ expand }}
               </i>

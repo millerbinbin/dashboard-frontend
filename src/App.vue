@@ -343,7 +343,7 @@ table.table tbody td,
 table.table tbody th {
   height: 10px !important;
   color: #fff !important;
-  font-size: 0.625em;
+  font-size: .75em;
 }
 
 table.table thead th {
@@ -355,6 +355,7 @@ table.table thead th {
 .application--light .table tbody tr:hover:not(.datatable__expand-row) {
   background-color: #6e88ac;
 }
+
 .circle-bar {
   text-align: center;
   margin-left: 3px !important;
@@ -377,7 +378,10 @@ table.table thead th {
   font-size: .75em;
   color: #6e88ac;
 }
-table.table tbody td:first-child, table.table tbody td:not(:first-child), table.table tbody th:first-child, table.table tbody th:not(:first-child), table.table thead td:first-child, table.table thead td:not(:first-child), table.table thead th:first-child, table.table thead th:not(:first-child){
-  padding: 0px 8px;
+table.table tbody td:first-child, table.table tbody td:not(:first-child), table.table tbody th:first-child, table.table tbody th:not(:first-child), table.table thead th:first-child, table.table thead th:not(:first-child){
+  padding: 0px 12px;
+}
+table.table tbody td:first-child, table.table tbody th:first-child{
+  padding: 0px 6px;
 }
 </style>

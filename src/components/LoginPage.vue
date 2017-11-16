@@ -44,6 +44,17 @@ axios.interceptors.request.use(
     return Promise.reject(error)
   })
 
+axios.interceptors.response.use(
+  function (response) {
+    return response
+  },
+  function (error) {
+    if (error.response.status === 401) {
+      location.href = '/login'
+    }
+    return Promise.reject(error)
+  })
+
 // let serverUrl = 'http://localhost:8080/dashboard-web/api'
 let serverUrl = '/api'
 let valueUrl = serverUrl + '/value'
