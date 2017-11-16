@@ -116,23 +116,27 @@
         </v-layout>
       </v-card>
     </v-card>
-    <v-card class="chart-detail-table">
+    <v-card class="chart-detail-table" v-if="headers">
       <v-data-table v-bind:headers="headers" :items="items" hide-actions item-key="name">
         <template slot="items" slot-scope="props">
-          <tr v-if="props.item.value==true || expand=='remove'">
-            <td>
-              <i v-if="props.item.value==true" class="material-icons md-8 yellow100" v-on:click="if (expand=='remove') expand='add'; else expand='remove'">
+          <tr v-if="props.item.value || expand==='remove'">
+            <td class="text-xs-left" style="width: 36px">
+              <i v-if="props.item.value" class="material-icons md-8 yellow100" v-on:click="if (expand==='remove') expand='add'; else expand='remove'">
                 {{ expand }}
               </i>
-              {{ props.item.name }}
+              {{ props.item.c1 }}
             </td>
-            <td class="text-xs-right">{{ props.item.calories }}</td>
-            <td class="text-xs-right">{{ props.item.fat }}</td>
-            <td class="text-xs-right">{{ props.item.carbs }}</td>
-            <td class="text-xs-right">{{ props.item.protein }}</td>
-            <td class="text-xs-right">{{ props.item.sodium }}</td>
-            <td class="text-xs-right">{{ props.item.calcium }}</td>
-            <td class="text-xs-right">{{ props.item.iron }}</td>
+            <td class="text-xs-right">{{ props.item.c2 }}</td>
+            <td class="text-xs-right">{{ props.item.c3 }}</td>
+            <td class="text-xs-right">{{ props.item.c4 }}</td>
+            <td class="text-xs-right">{{ props.item.c5 }}</td>
+            <td class="text-xs-right">{{ props.item.c6 }}</td>
+            <td v-if="headers.length >=7" class="text-xs-right">{{ props.item.c7 }}</td>
+            <td v-if="headers.length >=8" class="text-xs-right">{{ props.item.c8 }}</td>
+            <td v-if="headers.length >=9" class="text-xs-right">{{ props.item.c9 }}</td>
+            <td v-if="headers.length >=10" class="text-xs-right">{{ props.item.c10 }}</td>
+            <td v-if="headers.length >=11" class="text-xs-right">{{ props.item.c11 }}</td>
+            <td v-if="headers.length >=12" class="text-xs-right">{{ props.item.c12 }}</td>
           </tr>
         </template>
       </v-data-table>
@@ -149,6 +153,7 @@ let valueUrl = serverUrl + '/value'
 let chartUrl = serverUrl + '/chart'
 let chartOptionUrl = serverUrl + '/chartOption'
 let defUrl = serverUrl + '/def'
+let gridUrl = serverUrl + '/grid'
 
 export default {
   data: function () {
@@ -167,67 +172,8 @@ export default {
       data: {},
       def: {},
       tip: '',
-      headers: [
-        {
-          text: 'Dessert (100g serving)',
-          align: 'left',
-          sortable: false,
-          value: 'name'
-        },
-        {text: 'Calories', value: 'calories', sortable: false},
-        {text: 'Fat (g)', value: 'fat', sortable: false},
-        {text: 'Carbs (g)', value: 'carbs', sortable: false},
-        {text: 'Protein (g)', value: 'protein', sortable: false},
-        {text: 'Sodium (mg)', value: 'sodium', sortable: false},
-        {text: 'Calcium (%)', value: 'calcium', sortable: false},
-        {text: 'Iron (%)', value: 'iron', sortable: false}
-      ],
-      items: [
-        {
-          value: true,
-          name: '全部仓库',
-          calories: 159,
-          fat: 6.0,
-          carbs: 24,
-          protein: 4.0,
-          sodium: 87,
-          calcium: '14%',
-          iron: '1%'
-        },
-        {
-          value: false,
-          name: '上海1仓',
-          calories: 237,
-          fat: 9.0,
-          carbs: 37,
-          protein: 4.3,
-          sodium: 129,
-          calcium: '8%',
-          iron: '1%'
-        },
-        {
-          value: false,
-          name: '上海2仓',
-          calories: 262,
-          fat: 16.0,
-          carbs: 23,
-          protein: 6.0,
-          sodium: 337,
-          calcium: '6%',
-          iron: '7%'
-        },
-        {
-          value: false,
-          name: '上海3仓',
-          calories: 305,
-          fat: 3.7,
-          carbs: 67,
-          protein: 4.3,
-          sodium: 413,
-          calcium: '3%',
-          iron: '8%'
-        }
-      ],
+      headers: [],
+      items: [],
       metricId: null
     }
   },
@@ -244,16 +190,19 @@ export default {
       if (val.dateCycle === '日') {
         this.renderNumber(this.$route.params.id, 'day', this.$store.state.warehouse, this.$store.state.sysDate)
         this.renderChart(this.$route.params.id, 'day', this.$store.state.warehouse, this.$store.state.sysDate)
+        this.renderTable(this.$route.params.id, 'day', this.$store.state.sysDate)
         this.period = this.$store.state.sysDate
         this.tip = this.def.day
       } else if (val.dateCycle === '周') {
         this.renderNumber(this.$route.params.id, 'week', this.$store.state.warehouse, this.$store.state.sysDate)
         this.renderChart(this.$route.params.id, 'week', this.$store.state.warehouse, this.$store.state.sysDate)
+        this.renderTable(this.$route.params.id, 'week', this.$store.state.sysDate)
         this.period = this.$store.state.sysWeek
         this.tip = this.def.week
       } else if (val.dateCycle === '月') {
         this.renderNumber(this.$route.params.id, 'month', this.$store.state.warehouse, this.$store.state.sysDate)
         this.renderChart(this.$route.params.id, 'month', this.$store.state.warehouse, this.$store.state.sysDate)
+        this.renderTable(this.$route.params.id, 'month', this.$store.state.sysDate)
         this.period = this.$store.state.sysMonth
         this.tip = this.def.month
       }
@@ -267,6 +216,32 @@ export default {
         .catch(function (error) {
           console.log(error)
         })
+    },
+    renderTable (metricId, dateCycle, sysdate) {
+      if (dateCycle !== undefined) {
+        let query = {metric: metricId, cycle: dateCycle, sysdate: sysdate}
+        let url = combineUrl(gridUrl, query)
+        axios.get(url)
+          .then(function (response) {
+            var headers = response.data.headers
+            this.headers = []
+            for (let i = 0; i < headers.length; i++) {
+              const element = headers[i].split(',')
+              this.headers.push({text: element[1], sortable: false, value: element[0]})
+            }
+            var items = response.data.items
+            this.items = []
+            for (let i = 0; i < items.length; i++) {
+              var tmp = items[i]
+              if (i === 0) tmp.value = 1
+              else tmp.value = 0
+              this.items.push(tmp)
+            }
+          }.bind(this))
+          .catch(function (error) {
+            console.log(error)
+          })
+      }
     },
     renderNumber (metricId, dateCycle, warehouse, sysdate) {
       if (dateCycle !== undefined) {

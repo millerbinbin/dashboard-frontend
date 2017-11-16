@@ -31,6 +31,19 @@
 <script>
 import Vue from 'vue'
 import axios from 'axios'
+
+axios.interceptors.request.use(
+  function (config) {
+    if (config.url === '/auth/token') return config
+    if (localStorage.hasOwnProperty('JWT')) {
+      config.headers.Authorization = 'Bearer ' + localStorage.JWT
+    }
+    return config
+  },
+  function (error) {
+    return Promise.reject(error)
+  })
+
 // let serverUrl = 'http://localhost:8080/dashboard-web/api'
 let serverUrl = '/api'
 let valueUrl = serverUrl + '/value'
@@ -38,7 +51,7 @@ let chartUrl = serverUrl + '/chart'
 let chartOptionUrl = serverUrl + '/chartOption'
 let warehouseUrl = serverUrl + '/dim/warehouse'
 let dateCycleUrl = serverUrl + '/dim/datecycle'
-let loginUrl = serverUrl + '/user/login'
+let loginUrl = '/auth/token'
 let metricUrl = serverUrl + '/metric'
 let modelUrl = serverUrl + '/models'
 let echarts = require('echarts')
@@ -367,6 +380,7 @@ export default {
         }).then(function (res) {
           if (res.data.errors === undefined || res.data.errors.length === 0) {
             this.$store.commit('setUser', this.username)
+            localStorage.setItem('JWT', res.data.token)
             axios.all([this.getWarehouse(), this.getDateCycle()])
               .then(axios.spread(function (acct, perms) {
                 // Both requests are now complete

@@ -2,7 +2,7 @@
   <v-container grid-list-xs text-xs-left pt-0>
     <v-toolbar fixed>
       <v-layout row wrap text-xs-center>
-        <v-flex xs5 offset-xs4 filter style="font-size: 10px" text-xs-right>
+        <v-flex xs5 offset-xs4 filter text-xs-right>
           <v-select v-bind:items="warehouseList" v-model="warehouse" item-text="warehouseName" single-line bottom style="width: 90%"></v-select>
         </v-flex>
         <v-flex xs1 offset-xs2>
@@ -44,10 +44,10 @@ export default {
           list.push(c(item, {}))
         })
         if (list.length % 2 === 0) {
-          return c('div', {'class': {layout: true, row: true, wrap: true}}, list)
+          return c('div', {'class': {layout: true, row: true, wrap: true, number: true}}, list)
         } else {
           list.push(c('dummy-bar', {}))
-          return c('div', {'class': {layout: true, row: true, wrap: true}}, list)
+          return c('div', {'class': {layout: true, row: true, wrap: true, number: true}}, list)
         }
       },
       mounted: function () {

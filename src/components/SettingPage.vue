@@ -130,6 +130,10 @@
 
 <script>
 import draggable from 'vuedraggable'
+import axios from 'axios'
+let serverUrl = '/api'
+let metricUrl = serverUrl + '/metric'
+
 export default {
   components: {
     draggable
@@ -156,6 +160,24 @@ export default {
     showHelp: function () {
       alert('show some help?')
     },
+    updateMetric: function (metric) {
+      axios.put(metricUrl, [metric])
+        .then(function (res) {
+          console.log(res)
+        })
+        .catch(function (err) {
+          console.log(err)
+        })
+    },
+    updateMetrics: function (metrics) {
+      axios.put(metricUrl, metrics)
+        .then(function (res) {
+          console.log(res)
+        })
+        .catch(function (err) {
+          console.log(err)
+        })
+    },
     updateValueOption: function () {
       this.$store.commit('setHomepageValue', this.valueOptions)
       var seq = 0
@@ -166,6 +188,7 @@ export default {
         that.$store.commit('addMetrics', tmp)
         seq += 1
       })
+      this.updateMetrics(this.valueOptions)
     },
     updateChartOption: function () {
       this.$store.commit('setHomepageChart', this.chartOptions)
@@ -177,6 +200,7 @@ export default {
         that.$store.commit('addMetrics', tmp)
         seq += 1
       })
+      this.updateMetrics(this.chartOptions)
     },
     toggleValueOption: function (item, onClick) {
       var name = item.metricName
@@ -188,6 +212,8 @@ export default {
       var tmp = item
       tmp.metricType = 1 + this.comp_chart_option[name]
       this.$store.commit('addMetrics', tmp)
+      console.log(this.$store.state.allMetrics[name])
+      this.updateMetric(this.$store.state.allMetrics[name])
       var array = []
       var array2 = []
       for (var key in this.comp_value_option) {
@@ -211,6 +237,8 @@ export default {
       var tmp = item
       tmp.metricType = 1 + this.comp_chart_option[name]
       this.$store.commit('addMetrics', tmp)
+      console.log(this.$store.state.allMetrics[name])
+      this.updateMetric(this.$store.state.allMetrics[name])
       var array = []
       var array2 = []
       for (var key in this.comp_chart_option) {

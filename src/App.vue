@@ -194,10 +194,16 @@ body {
 /* numberBox*/
 .number-box {
   padding: 4px;
-  margin-left: 3px;
-  margin-bottom: 6px;
-  margin-right: 3px;
-  height: 82px !important;
+  margin-top: 4px;
+  margin-left: 2px;
+  margin-right: 2px;
+  height: 85px !important;
+}
+
+.number {
+  margin-bottom: 10px !important;
+  margin-left: 1px !important;
+  margin-right: 1px !important;
 }
 
 .flex .box-func-name,
@@ -230,15 +236,14 @@ body {
 }
 /* chartBox */
 .chart {
-  margin-top: 6px !important;
-  margin-bottom: 12px !important;
+  margin-bottom: 10px !important;
   margin-left: 3px !important;
   margin-right: 3px !important;
 }
 /** chartHeader **/
 .chart-header {
   padding: 5px;
-  height: 82px !important;
+  height: 85px !important;
   background-color: #364962 !important;
   box-shadow: none;
 }
@@ -246,9 +251,9 @@ body {
 /** chartBody **/
 .chart-body.card {
   padding: 5px !important;
-  height: 190px !important;
+  height: 195px !important;
   background-color: #2e3c51 !important;
-  box-shadow: none;
+  
   text-align: left !important;
   margin-bottom: 6px;
 }
@@ -371,5 +376,8 @@ table.table thead th {
 .logout {
   font-size: .75em;
   color: #6e88ac;
+}
+table.table tbody td:first-child, table.table tbody td:not(:first-child), table.table tbody th:first-child, table.table tbody th:not(:first-child), table.table thead td:first-child, table.table thead td:not(:first-child), table.table thead th:first-child, table.table thead th:not(:first-child){
+  padding: 0px 8px;
 }
 </style>
