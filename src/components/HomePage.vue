@@ -22,7 +22,7 @@
       <i class="material-icons md-32 grey100" v-on:click="goSettings">add_circle</i>
     </v-card>
     <v-layout row wrap text-xs-center pt-2>
-      <v-flex pa-2 xs4 v-for="(item, idx) in this.$store.state.homepageFree" :key="idx" @click="goDetails(item.id)">
+      <v-flex pa-2 xs4 v-for="(item, idx) in this.$store.state.homepageFree" :key="item.id" @click="goDetails(item.id)">
         <v-card> {{ item.metricName }} </v-card>
       </v-flex>
     </v-layout>

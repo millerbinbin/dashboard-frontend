@@ -8,8 +8,8 @@
       </v-flex>
       <v-flex xs6 offset-xs3>
         <v-form v-model="valid" ref="form">
-          <v-text-field label="账号" v-model="username" :rules="nameRules" required></v-text-field>
-          <v-text-field label="密码" v-model="password" :rules="pwdRules" type="password" required></v-text-field>
+          <v-text-field label="账号" v-model="username" :rules="nameRules" required ref="username"></v-text-field>
+          <v-text-field label="密码" v-model="password" :rules="pwdRules" type="password" required ref="pwd"></v-text-field>
           <v-alert v-show="!verified" color="error" icon="warning" style="font-size: .625em" value="true">
             {{ errorMsg }}
           </v-alert>
@@ -49,6 +49,7 @@ axios.interceptors.response.use(
     return response
   },
   function (error) {
+    // unauthorized with invalid token
     if (error.response.status === 401) {
       location.href = '/login'
     }
@@ -61,7 +62,7 @@ let valueUrl = serverUrl + '/value'
 let chartUrl = serverUrl + '/chart'
 let chartOptionUrl = serverUrl + '/chartOption'
 let warehouseUrl = serverUrl + '/dim/warehouse'
-let dateCycleUrl = serverUrl + '/dim/datecycle'
+let dateCycleUrl = serverUrl + '/dim/dateCycle'
 let loginUrl = '/auth/token'
 let metricUrl = serverUrl + '/metric'
 let modelUrl = serverUrl + '/models'
@@ -389,7 +390,7 @@ export default {
           username: this.username,
           password: this.password
         }).then(function (res) {
-          if (res.data.errors === undefined || res.data.errors.length === 0) {
+          if (res.data.token !== undefined) {
             this.$store.commit('setUser', this.username)
             localStorage.setItem('JWT', res.data.token)
             axios.all([this.getWarehouse(), this.getDateCycle()])
@@ -398,8 +399,9 @@ export default {
               }))
           } else {
             this.verified = false
-            this.errorMsg = res.data.errors[0].msg
-            this.$refs.form.reset()
+            this.errorMsg = res.data.msg
+            this.$refs.username.reset()
+            this.$refs.pwd.reset()
           }
         }.bind(this))
           .catch(function (err) {

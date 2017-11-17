@@ -15,7 +15,7 @@
       <v-flex xs12>
         <v-layout row wrap text-xs-left>
           <v-flex xs2 filter>
-            <v-select v-bind:items="dateCycleList" v-model="a1" item-text="dateCycle" single-line bottom ></v-select>
+            <v-select v-bind:items="this.$store.state.dateCycleList" v-model="a1" item-text="dateCycle" single-line bottom ></v-select>
           </v-flex>
           <v-flex xs8 detail-info>
             <span>{{period}}</span>
@@ -165,9 +165,6 @@ export default {
       period: '',
       expand: 'remove',
       dateCycleList: [
-        { dateCycle: '日', id: 1 },
-        { dateCycle: '周', id: 2 },
-        { dateCycle: '月', id: 3 }
       ],
       data: {},
       def: {},
@@ -285,6 +282,7 @@ export default {
     var metricId = this.$route.params.id
     this.getDef(metricId)
     this.chartId = metricId
+    this.dateCycleList = this.$store.state.dateCycleList
     this.a1 = this.dateCycleList[0]
   }
 }

@@ -41,8 +41,8 @@
             <v-card flat>
               <v-list one-line>
                 <v-divider></v-divider>
-                <template v-for="(metric, idx) in metrics">
-                  <v-list-tile avatar :key="metric.id">
+                <div v-for="(metric, idx) in metrics" :key="metric.id">
+                  <v-list-tile avatar>
                     <v-list-tile-action>
                       <v-checkbox v-model="comp_value_option[metric.metricName]" :disabled="comp_value_option[metric.metricName]==-1" 
                       :true-value="1" :false-value="0" @change="toggleValueOption(metric)"></v-checkbox>
@@ -51,8 +51,8 @@
                       <v-list-tile-title>{{metric.metricName}}</v-list-tile-title>
                     </v-list-tile-content>
                   </v-list-tile>
-                  <v-divider v-if="idx + 1 < metrics.length" :key="metric.id"></v-divider>
-                </template>
+                  <v-divider v-if="idx + 1 < metrics.length"></v-divider>
+                </div>
               </v-list>
             </v-card>
           </v-tabs-content>
@@ -61,8 +61,8 @@
             <v-card flat>
               <v-list one-line>
                 <v-divider></v-divider>
-                <template v-for="(metric, idx) in metrics">
-                  <v-list-tile avatar :key="metric.id">
+                <div v-for="(metric, idx) in metrics" :key="metric.id">
+                  <v-list-tile avatar>
                     <v-list-tile-action>
                       <v-checkbox v-model="comp_chart_option[metric.metricName]" :disabled="comp_chart_option[metric.metricName]==-1" 
                       :true-value="1" :false-value="0" @change="toggleChartOption(metric)"></v-checkbox>
@@ -71,8 +71,8 @@
                       <v-list-tile-title>{{metric.metricName}}</v-list-tile-title>
                     </v-list-tile-content>
                   </v-list-tile>
-                  <v-divider v-if="idx + 1 < metrics.length" :key="metric.id"></v-divider>
-                </template>
+                  <v-divider v-if="idx + 1 < metrics.length"></v-divider>
+                </div>
               </v-list>
             </v-card>
           </v-tabs-content>
@@ -94,6 +94,7 @@
                 </draggable>
               </v-list>
             </v-card>
+            <v-divider></v-divider>
             <v-card flat>
               <v-list one-line subheader>
                 <v-subheader>趋势图</v-subheader>
@@ -163,7 +164,6 @@ export default {
     updateMetric: function (metric) {
       axios.put(metricUrl, [metric])
         .then(function (res) {
-          console.log(res)
         })
         .catch(function (err) {
           console.log(err)
@@ -172,7 +172,6 @@ export default {
     updateMetrics: function (metrics) {
       axios.put(metricUrl, metrics)
         .then(function (res) {
-          console.log(res)
         })
         .catch(function (err) {
           console.log(err)
