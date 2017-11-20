@@ -6,11 +6,6 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'app'
-}
-</script>
 
 <style>
 body {
@@ -35,7 +30,7 @@ body {
   color: #fff !important;
 }
 
-.btn {
+.btn--icon {
   color: #fff !important;
   margin: 0px;
 }
@@ -385,3 +380,10 @@ table.table tbody td:first-child, table.table tbody th:first-child{
   padding: 0px 6px;
 }
 </style>
+
+<script>
+import 'vuetify/dist/vuetify.min.css'
+export default {
+  name: 'app'
+}
+</script>
